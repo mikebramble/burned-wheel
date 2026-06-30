@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generic Burning Wheel Character Sheet</title>
+<style>
+    :root {
+        --bg-color: #f7f5f0;
+        --card-bg: #ffffff;
+        --text-main: #2c2c2c;
+        --accent: #8b2626;
+        --border-color: #d1cdb7;
+    }
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-main);
+        padding: 20px;
+        line-height: 1.5;
+    }
+    .sheet-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        background: var(--card-bg);
+        padding: 40px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+    }
+    .header {
+        border-bottom: 3px solid var(--accent);
+        padding-bottom: 20px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    .header-input {
+        font-family: 'Georgia', serif;
+        font-size: 2.5em;
+        color: var(--accent);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        text-align: center;
+        border: none;
+        border-bottom: 2px dashed var(--border-color);
+        background: transparent;
+        width: 80%;
+        margin-bottom: 15px;
+    }
+    .header-input:focus { outline: none; border-bottom: 2px solid var(--accent); }
+    
+    .header-details {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        font-size: 1.1em;
+        flex-wrap: wrap;
+    }
+    .inline-input {
+        border: none;
+        border-bottom: 1px solid var(--border-color);
+        background: transparent;
+        font-family: inherit;
+        font-size: inherit;
+        color: inherit;
+        padding: 2px 5px;
+    }
+    .inline-input:focus { outline: none; border-bottom: 1px solid var(--accent); }
+
+    .grid-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+    
+    .section-title {
+        font-family: 'Georgia', serif;
+        color: var(--accent);
+        border-bottom: 1px solid var(--accent);
+        padding-bottom: 5px;
+        margin-top: 30px;
+        text-transform: uppercase;
+    }
+    .data-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 6px 0;
+        border-bottom: 1px dashed #e0e0e0;
+    }
+    .bubbles { display: flex; gap: 10px; align-items: center; font-size: 0.9em; }
+    .bubbles label { display: flex; align-items: center; gap: 3px; cursor: pointer; }
+    
+    input[type="checkbox"] { accent-color: var(--accent); cursor: pointer; width: 16px; height: 16px; }
+    
+    textarea {
+        width: 100%;
+        box-sizing: border-box;
+        border: 1px solid var(--border-color);
+        background: #fafafa;
+        padding: 8px;
+        font-family: inherit;
+        border-radius: 3px;
+        resize: vertical;
+        min-height: 50px;
+    }
+    
+    .bold { font-weight: bold; }
+    
+    .btn-clear {
+        display: block;
+        margin: 40px auto 0;
+        padding: 10px 20px;
+        background-color: var(--accent);
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+    .btn-clear:hover { background-color: #631b1b; }
+</style>
+</head>
+<body>
+
+<div class="sheet-container">
+    <div class="header">
+        <input type="text" class="header-input" placeholder="CHARACTER NAME">
+        <div class="header-details">
+            <div><span class="bold">Stock:</span> <input type="text" class="inline-input" placeholder="e.g. Man" style="width: 100px;"></div>
+            <div><span class="bold">Age:</span> <input type="text" class="inline-input" placeholder="#" style="width: 50px;"></div>
+            <div><span class="bold">Lifepaths:</span> <input type="text" class="inline-input" placeholder="List Lifepaths..." style="width: 400px;"></div>
+        </div>
+    </div>
+
+    <div class="grid-2col">
+        <!-- LEFT COLUMN -->
+        <div>
+            <h2 class="section-title">Beliefs & Instincts</h2>
+            <!-- Loop for 3 Beliefs -->
+            <div style="margin-bottom: 20px;">
+                <div class="data-row"><span class="bold">Belief 1</span>
+                    <span class="bubbles"><label><input type="checkbox"> F</label><label><input type="checkbox"> P</label><label><input type="checkbox"> D</label></span>
+                </div>
+                <textarea placeholder="Enter Belief..."></textarea>
+                <div class="data-row"><span class="bold">Belief 2</span>
+                    <span class="bubbles"><label><input type="checkbox"> F</label><label><input type="checkbox"> P</label><label><input type="checkbox"> D</label></span>
+                </div>
+                <textarea placeholder="Enter Belief..."></textarea>
+                <div class="data-row"><span class="bold">Belief 3</span>
+                    <span class="bubbles"><label><input type="checkbox"> F</label><label><input type="checkbox"> P</label><label><input type="checkbox"> D</label></span>
+                </div>
+                <textarea placeholder="Enter Belief..."></textarea>
+            </div>
+            
+            <h2 class="section-title">Traits</h2>
+            <div style="display:flex; flex-direction:column; gap:5px;">
+                <input type="text" class="inline-input" placeholder="Trait Name (Type)">
+                <input type="text" class="inline-input" placeholder="Trait Name (Type)">
+                <input type="text" class="inline-input" placeholder="Trait Name (Type)">
+                <input type="text" class="inline-input" placeholder="Trait Name (Type)">
+                <input type="text" class="inline-input" placeholder="Trait Name (Type)">
+                <input type="text" class="inline-input" placeholder="Trait Name (Type)">
+            </div>
+        </div>
+
+        <!-- RIGHT COLUMN -->
+        <div>
+            <h2 class="section-title">Artha Pool</h2>
+            <div class="data-row"><span class="bold">Fate</span>
+                <span class="bubbles"><input type="checkbox"><input type="checkbox"><input type="checkbox"><input type="checkbox"><input type="checkbox"><input type="checkbox"><input type="checkbox"><input type="checkbox"></span>
+            </div>
+            <div class="data-row"><span class="bold">Persona</span>
+                <span class="bubbles"><input type="checkbox"><input type="checkbox"><input type="checkbox"><input type="checkbox"><input type="checkbox"><input type="checkbox"><input type="checkbox"><input type="checkbox"></span>
+            </div>
+            <div class="data-row"><span class="bold">Deeds</span>
+                <span class="bubbles"><input type="checkbox"><input type="checkbox"><input type="checkbox"><input type="checkbox"><input type="checkbox"></span>
+            </div>
+
+            <h2 class="section-title">Attributes</h2>
+            <div class="data-row"><span class="bold">Health:</span> <input type="text" class="inline-input" style="width:50px; text-align:center;" placeholder="Exp"></div>
+            <div class="data-row"><span class="bold">Steel:</span> <input type="text" class="inline-input" style="width:50px; text-align:center;" placeholder="Exp"></div>
+            <div class="data-row"><span class="bold">Reflexes:</span> <input type="text" class="inline-input" style="width:50px; text-align:center;" placeholder="Exp"></div>
+            <div class="data-row"><span class="bold">Mortal Wound:</span> <input type="text" class="inline-input" style="width:50px; text-align:center;" placeholder="Exp"></div>
+            <div class="data-row"><span class="bold">Hesitation:</span> <input type="text" class="inline-input" style="width:50px; text-align:center;" placeholder="Exp"></div>
+
+            <h2 class="section-title">Gear & Possessions</h2>
+            <textarea style="height: 120px;" placeholder="List your weapons, armor, property, and personal effects here..."></textarea>
+        </div>
+    </div>
+
+    <!-- FULL WIDTH SECTIONS -->
+    <h2 class="section-title">Core Stats</h2>
+    <div class="grid-2col">
+        <!-- Generic Stat Blocks x 6 -->
+        <div class="data-row">
+            <span style="display:flex; gap: 5px;">
+                <input type="text" class="inline-input bold" placeholder="Stat Name" style="width: 100px;">
+                <input type="text" class="inline-input" placeholder="Exp" style="width: 30px; text-align: center;">
+            </span>
+            <span class="bubbles">
+                R: <input type="checkbox"><input type="checkbox"><input type="checkbox">
+                D: <input type="checkbox"><input type="checkbox">
+                C: <input type="checkbox"><input type="checkbox">
+            </span>
+        </div>
+        <div class="data-row">
+            <span style="display:flex; gap: 5px;">
+                <input type="text" class="inline-input bold" placeholder="Stat Name" style="width: 100px;">
+                <input type="text" class="inline-input" placeholder="Exp" style="width: 30px; text-align: center;">
+            </span>
+            <span class="bubbles">
+                R: <input type="checkbox"><input type="checkbox"><input type="checkbox">
+                D: <input type="checkbox"><input type="checkbox">
+                C: <input type="checkbox"><input type="checkbox">
+            </span>
+        </div>
+        <div class="data-row">
+            <span style="display:flex; gap: 5px;">
+                <input type="text" class="inline-input bold" placeholder="Stat Name" style="width: 100px;">
+                <input type="text" class="inline-input" placeholder="Exp" style="width: 30px; text-align: center;">
+            </span>
+            <span class="bubbles">
+                R: <input type="checkbox"><input type="checkbox"><input type="checkbox">
+                D: <input type="checkbox"><input type="checkbox">
+                C: <input type="checkbox"><input type="checkbox">
+            </span>
+        </div>
+        <div class="data-row">
+            <span style="display:flex; gap: 5px;">
+                <input type="text" class="inline-input bold" placeholder="Stat Name" style="width: 100px;">
+                <input type="text" class="inline-input" placeholder="Exp" style="width: 30px; text-align: center;">
+            </span>
+            <span class="bubbles">
+                R: <input type="checkbox"><input type="checkbox"><input type="checkbox">
+                D: <input type="checkbox"><input type="checkbox">
+                C: <input type="checkbox"><input type="checkbox">
+            </span>
+        </div>
+        <div class="data-row">
+            <span style="display:flex; gap: 5px;">
+                <input type="text" class="inline-input bold" placeholder="Stat Name" style="width: 100px;">
+                <input type="text" class="inline-input" placeholder="Exp" style="width: 30px; text-align: center;">
+            </span>
+            <span class="bubbles">
+                R: <input type="checkbox"><input type="checkbox"><input type="checkbox">
+                D: <input type="checkbox"><input type="checkbox">
+                C: <input type="checkbox"><input type="checkbox">
+            </span>
+        </div>
+        <div class="data-row">
+            <span style="display:flex; gap: 5px;">
+                <input type="text" class="inline-input bold" placeholder="Stat Name" style="width: 100px;">
+                <input type="text" class="inline-input" placeholder="Exp" style="width: 30px; text-align: center;">
+            </span>
+            <span class="bubbles">
+                R: <input type="checkbox"><input type="checkbox"><input type="checkbox">
+                D: <input type="checkbox"><input type="checkbox">
+                C: <input type="checkbox"><input type="checkbox">
+            </span>
+        </div>
+    </div>
+
+    <h2 class="section-title">Skills Tracker</h2>
+    <div class="grid-2col" style="gap: 15px;">
+        <!-- Generating 12 Empty Skill Rows -->
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+            <script>
+                for(let i=0; i<6; i++) {
+                    document.write(`
+                    <div class="data-row">
+                        <span style="display:flex; gap: 5px;">
+                            <input type="text" class="inline-input" placeholder="Skill Name" style="width: 130px;">
+                            <input type="text" class="inline-input" placeholder="Exp" style="width: 30px; text-align: center;">
+                        </span>
+                        <span class="bubbles">R: <input type="checkbox"><input type="checkbox"><input type="checkbox"> D: <input type="checkbox"><input type="checkbox"><input type="checkbox"> C: <input type="checkbox"><input type="checkbox"><input type="checkbox"></span>
+                    </div>
+                    `);
+                }
+            </script>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+            <script>
+                for(let i=0; i<6; i++) {
+                    document.write(`
+                    <div class="data-row">
+                        <span style="display:flex; gap: 5px;">
+                            <input type="text" class="inline-input" placeholder="Skill Name" style="width: 130px;">
+                            <input type="text" class="inline-input" placeholder="Exp" style="width: 30px; text-align: center;">
+                        </span>
+                        <span class="bubbles">R: <input type="checkbox"><input type="checkbox"><input type="checkbox"> D: <input type="checkbox"><input type="checkbox"><input type="checkbox"> C: <input type="checkbox"><input type="checkbox"><input type="checkbox"></span>
+                    </div>
+                    `);
+                }
+            </script>
+        </div>
+    </div>
+
+    <button class="btn-clear" onclick="clearData()">Wipe Character Data</button>
+
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const pagePrefix = window.location.pathname + "_";
+        const inputs = document.querySelectorAll("input, textarea");
+
+        inputs.forEach((input, index) => {
+            const id = input.id || "bw_input_" + index;
+            input.id = id;
+            const storageKey = pagePrefix + id;
+
+            const savedValue = localStorage.getItem(storageKey);
+            if (savedValue !== null) {
+                if (input.type === "checkbox") {
+                    input.checked = (savedValue === "true");
+                } else {
+                    input.value = savedValue;
+                }
+            }
+
+            input.addEventListener("change", () => {
+                if (input.type === "checkbox") {
+                    localStorage.setItem(storageKey, input.checked);
+                } else {
+                    localStorage.setItem(storageKey, input.value);
+                }
+            });
+            input.addEventListener("input", () => {
+                if (input.type !== "checkbox") {
+                    localStorage.setItem(storageKey, input.value);
+                }
+            });
+        });
+    });
+
+    function clearData() {
+        if(confirm("Are you sure you want to wipe all unsaved checkbox and text data? This cannot be undone.")) {
+            const pagePrefix = window.location.pathname + "_";
+            const keysToRemove = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.startsWith(pagePrefix)) {
+                    keysToRemove.push(key);
+                }
+            }
+            keysToRemove.forEach(key => localStorage.removeItem(key));
+            location.reload();
+        }
+    }
+</script>
+
+</body>
+</html>
