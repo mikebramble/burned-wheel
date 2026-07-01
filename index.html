@@ -20,7 +20,7 @@
         line-height: 1.5;
     }
     .sheet-container {
-        max-width: 1100px;
+        max-width: 1150px;
         margin: 0 auto;
         background: var(--card-bg);
         padding: 40px;
@@ -36,19 +36,26 @@
         background: transparent; width: 80%; margin-bottom: 15px;
     }
     .header-input:focus { outline: none; border-bottom: 2px solid var(--accent); }
-    .header-details { display: flex; justify-content: center; gap: 20px; font-size: 1.1em; flex-wrap: wrap; }
+    
+    .header-details { display: flex; justify-content: center; gap: 20px; font-size: 1.1em; flex-wrap: wrap; width: 100%; }
+    .header-details > div { display: flex; align-items: center; white-space: nowrap; }
     
     .inline-input {
         border: none; border-bottom: 1px solid var(--border-color); background: transparent;
         font-family: inherit; font-size: inherit; color: inherit; padding: 2px 5px; width: 100%; box-sizing: border-box;
     }
     .inline-input:focus { outline: none; border-bottom: 1px solid var(--accent); }
+    
+    /* Tweaked Placeholders */
+    ::placeholder { color: #a0a0a0; font-weight: normal !important; opacity: 1; }
+    ::-webkit-input-placeholder { color: #a0a0a0; font-weight: normal !important; }
+    
     .shade-input { width: 25px; text-align: center; font-weight: bold; text-transform: uppercase; }
     .exp-input { width: 35px; text-align: center; }
 
     .grid-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
-    .grid-3col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
-    .grid-4col { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; }
+    .grid-3col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; align-items: center; }
+    .grid-4col { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; align-items: center; }
     
     .section-header-flex {
         display: flex; justify-content: space-between; align-items: flex-end;
@@ -69,20 +76,27 @@
         border-radius: 4px; padding: 4px 10px; cursor: pointer; font-size: 0.85em; font-weight: bold;
     }
     .btn-add:hover { background-color: #d4d4d4; }
+    
+    .btn-del {
+        background-color: #ffecec; color: #d9534f; border: 1px solid #ffcccc;
+        border-radius: 3px; padding: 2px 6px; cursor: pointer; font-size: 0.8em; font-weight: bold; margin-left: 5px;
+    }
+    .btn-del:hover { background-color: #d9534f; color: white; }
 
     .data-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px dashed #e0e0e0; }
-    .bubbles { display: flex; gap: 8px; align-items: center; font-size: 0.9em; }
+    .bubbles { display: flex; gap: 4px; align-items: center; font-size: 0.9em; }
     .bubbles label { display: flex; align-items: center; gap: 2px; cursor: pointer; }
     
     input[type="checkbox"] { accent-color: var(--accent); cursor: pointer; width: 14px; height: 14px; margin: 0; }
-    input[type="number"] { width: 50px; text-align: center; border: 1px solid var(--border-color); padding: 4px; }
+    input[type="number"] { width: 45px; text-align: center; border: 1px solid var(--border-color); padding: 4px; border-radius: 3px; }
     
     textarea {
         width: 100%; box-sizing: border-box; border: 1px solid var(--border-color);
         background: #fafafa; padding: 8px; font-family: inherit; border-radius: 3px;
         resize: vertical; min-height: 60px; margin-top: 5px;
     }
-    
+    select { background: transparent; border: 1px solid var(--border-color); font-family: inherit; padding: 2px; }
+
     .bw-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9em; }
     .bw-table th, .bw-table td { border: 1px solid var(--border-color); padding: 5px; text-align: center; }
     .bw-table th { background-color: #f0f0f0; font-weight: bold; }
@@ -103,7 +117,7 @@
     @media print {
         body { background-color: white; padding: 0; }
         .sheet-container { box-shadow: none; border: none; padding: 0; max-width: 100%; }
-        .controls, .btn-add { display: none; }
+        .controls, .btn-add, .btn-del { display: none; }
         textarea { resize: none; overflow: hidden; }
         .inline-input { border-bottom: 1px solid #ccc; }
     }
@@ -115,34 +129,34 @@
     <div class="header">
         <input type="text" class="header-input" placeholder="CHARACTER NAME" id="char_name">
         <div class="header-details">
-            <div><span class="bold">Stock:</span> <input type="text" class="inline-input" style="width: 100px;" id="char_stock"></div>
-            <div><span class="bold">Age:</span> <input type="text" class="inline-input" style="width: 50px;" id="char_age"></div>
-            <div><span class="bold">Lifepaths:</span> <input type="text" class="inline-input" style="width: 400px;" id="char_lifepaths"></div>
+            <div><span class="bold">Stock:</span> <input type="text" class="inline-input" style="width: 100px; margin-left: 5px;" id="char_stock"></div>
+            <div><span class="bold">Age:</span> <input type="text" class="inline-input" style="width: 50px; margin-left: 5px;" id="char_age"></div>
+            <div style="flex-grow: 1;"><span class="bold">Lifepaths:</span> <input type="text" class="inline-input" style="width: 100%; margin-left: 5px;" id="char_lifepaths"></div>
         </div>
     </div>
 
     <h2 class="section-title-static" style="text-align: center;">Artha and Epiphanies</h2>
     <div class="grid-3col" style="text-align: center; margin-bottom: 15px;">
         <div>
-            <div class="bold">Fate</div><div class="text-sm">Open-end 6s</div>
-            <input type="number" value="0" id="artha_fate">
+            <div class="bold" style="font-size: 1.4em; color: var(--accent);">Fate</div>
+            <div class="text-sm">Open-end 6s</div>
+            <input type="number" value="0" id="artha_fate" style="font-size: 1.3em; width: 70px; height: 35px; margin-top: 5px;">
         </div>
         <div>
-            <div class="bold">Persona</div><div class="text-sm">+1D per point</div>
-            <input type="number" value="0" id="artha_persona">
+            <div class="bold" style="font-size: 1.4em; color: var(--accent);">Persona</div>
+            <div class="text-sm">+1D per point</div>
+            <input type="number" value="0" id="artha_persona" style="font-size: 1.3em; width: 70px; height: 35px; margin-top: 5px;">
         </div>
         <div>
-            <div class="bold">Deeds</div><div class="text-sm">Double dice or reroll</div>
-            <input type="number" value="0" id="artha_deeds">
+            <div class="bold" style="font-size: 1.4em; color: var(--accent);">Deeds</div>
+            <div class="text-sm">Double dice or reroll</div>
+            <input type="number" value="0" id="artha_deeds" style="font-size: 1.3em; width: 70px; height: 35px; margin-top: 5px;">
         </div>
     </div>
-    <div class="text-sm" style="text-align: center; margin-bottom: 20px;">
+    <div class="text-sm" style="text-align: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px dashed var(--border-color);">
         <span class="bold">Epiphany (permanent shade shift):</span> 3 Deeds, 10 Persona, 20 Fate | 
         <span class="bold">Aristeia (temporary shade shift):</span> 1 Deeds, 3 Persona, 5 Fate
     </div>
-
-    <div class="grid-4col" id="artha_tracker_container">
-        </div>
 
     <div class="grid-2col">
         <div>
@@ -158,6 +172,9 @@
 
             <h2 class="section-title-static">Attributes</h2>
             <div id="attributes_container"></div>
+            
+            <h2 class="section-title-static">Gear</h2>
+            <textarea style="height: 120px;" id="gear_main" placeholder="Traveling gear, property, etc..."></textarea>
         </div>
     </div>
 
@@ -171,7 +188,7 @@
         <h2 class="section-title">Traits</h2>
         <button class="btn-add" onclick="addNewRow('traits')">+ Add Row</button>
     </div>
-    <div class="grid-3col" style="margin-top: 10px; border-bottom: 1px solid #ccc; padding-bottom: 5px;">
+    <div class="grid-3col" style="margin-top: 10px; border-bottom: 1px solid #ccc; padding-bottom: 5px; padding-right: 35px;">
         <div class="bold text-center">Character</div>
         <div class="bold text-center">Die</div>
         <div class="bold text-center">Call-on</div>
@@ -182,7 +199,7 @@
         <h2 class="section-title">Relationships & Circles</h2>
         <button class="btn-add" onclick="addNewRow('relationships')">+ Add Row</button>
     </div>
-    <div class="grid-4col" style="margin-top: 10px; border-bottom: 1px solid #ccc; padding-bottom: 5px;">
+    <div class="grid-4col" style="margin-top: 10px; border-bottom: 1px solid #ccc; padding-bottom: 5px; padding-right: 35px;">
         <div class="bold text-center">Relationships</div>
         <div class="bold text-center">Circles</div>
         <div class="bold text-center">Named Circles</div>
@@ -194,7 +211,7 @@
         <h2 class="section-title">Contacts</h2>
         <button class="btn-add" onclick="addNewRow('contacts')">+ Add Row</button>
     </div>
-    <div class="grid-4col" style="margin-top: 10px; border-bottom: 1px solid #ccc; padding-bottom: 5px;">
+    <div class="grid-4col" style="margin-top: 10px; border-bottom: 1px solid #ccc; padding-bottom: 5px; padding-right: 35px;">
         <div class="bold text-center">Name</div>
         <div class="bold text-center">Description</div>
         <div class="bold text-center">Aptitude</div>
@@ -205,16 +222,15 @@
     <h2 class="section-title-static">Physical Tolerances & Wound Tracker</h2>
     <div style="overflow-x: auto;">
         <table class="bw-table">
-            <tr>
-                <th>Tolerance</th><th></th><th>Su</th><th></th><th>Li</th><th></th><th>Mi</th><th>Se</th><th>Tr</th><th>Mo</th>
-                <th></th><th></th><th></th><th></th><th></th><th></th><th></th>
-            </tr>
+            <tr id="tolerance_select_row">
+                </tr>
             <tr class="bg-gray">
                 <td class="bold">Coord</td>
                 <td>B1</td><td>B2</td><td>B3</td><td>B4</td><td>B5</td><td>B6</td><td>B7</td><td>B8</td>
                 <td>B9</td><td>B10</td><td>B11</td><td>B12</td><td>B13</td><td>B14</td><td>B15</td><td>B16</td>
             </tr>
-            <tr id="injury_row"></tr>
+            <tr id="injury_row">
+                </tr>
         </table>
     </div>
 
@@ -224,7 +240,7 @@
                 <th>Wound</th><th>Penalty</th><th>Obstacle Penalties</th><th>Wounded Dice</th>
                 <th>Injury Recovery</th><th>Injury Recovery</th><th>Injury Recovery</th>
             </tr>
-        </table>
+            </table>
     </div>
 
     <h2 class="section-title-static">Weapons and Armor</h2>
@@ -235,8 +251,6 @@
                 <tr><th colspan="3">ARMOR</th></tr>
                 <tr><th>Location</th><th>Type</th><th>Dice</th></tr>
             </table>
-            <h3 style="font-family: 'Georgia', serif; font-size: 1.1em; color: var(--accent); margin-top: 15px;">Other Gear</h3>
-            <textarea style="height: 120px;" id="other_gear" placeholder="Traveling gear, property, etc..."></textarea>
         </div>
     </div>
 
@@ -256,83 +270,121 @@
     const pagePrefix = window.location.pathname + "_";
 
     // --- TEMPLATES FOR DYNAMIC SECTIONS ---
+    // Note the added delete buttons and expanded Skill F/P/D layout.
     const templates = {
         skills: (i) => `
-            <div class="data-row">
-                <span style="display:flex; gap: 10px; align-items: center; width: 45%;">
-                    <input type="text" class="inline-input bold" placeholder="Skill Name" id="skill_name_${i}" style="width: 70%;">
-                    <input type="text" class="inline-input shade-input" placeholder="B" id="skill_shade_${i}" title="Shade">
-                    <input type="text" class="inline-input exp-input" placeholder="#" id="skill_exp_${i}" title="Exp">
+            <div class="data-row" id="row_skills_${i}">
+                <span style="display:flex; gap: 8px; align-items: center; width: 35%;">
+                    <input type="text" class="inline-input bold" placeholder="Skill Name" id="skill_name_${i}" style="width: 60%;">
+                    <input type="text" class="inline-input shade-input" placeholder="B" id="skill_shade_${i}">
+                    <input type="text" class="inline-input exp-input" placeholder="#" id="skill_exp_${i}">
                 </span>
-                <span class="bubbles" style="width: 55%; justify-content: flex-end;">
+                <span class="bubbles" style="width: 35%; justify-content: center;">
                     <span class="bold text-sm">R:</span> <input type="checkbox" id="skill_r1_${i}"><input type="checkbox" id="skill_r2_${i}"><input type="checkbox" id="skill_r3_${i}"><input type="checkbox" id="skill_r4_${i}"> 
-                    <span style="margin: 0 5px;">|</span>
+                    <span style="margin: 0 4px; color:#ccc;">|</span>
                     <span class="bold text-sm">D:</span> <input type="checkbox" id="skill_d1_${i}"><input type="checkbox" id="skill_d2_${i}"><input type="checkbox" id="skill_d3_${i}"><input type="checkbox" id="skill_d4_${i}">
-                    <span style="margin: 0 5px;">|</span>
+                    <span style="margin: 0 4px; color:#ccc;">|</span>
                     <span class="bold text-sm">C:</span> <input type="checkbox" id="skill_c1_${i}"><input type="checkbox" id="skill_c2_${i}"><input type="checkbox" id="skill_c3_${i}">
+                </span>
+                <span class="bubbles" style="width: 30%; justify-content: flex-end;">
+                    <span class="bold text-sm">F:</span><input type="number" id="skill_f_${i}" style="width: 35px;">
+                    <span class="bold text-sm">P:</span><input type="number" id="skill_p_${i}" style="width: 35px;">
+                    <span class="bold text-sm">D:</span><input type="number" id="skill_d_${i}" style="width: 35px;">
+                    <button class="btn-del" onclick="deleteRow('skills', ${i})">×</button>
                 </span>
             </div>`,
         traits: (i) => `
-            <div class="grid-3col">
-                <input type="text" class="inline-input" placeholder="Character Trait" id="trait_char_${i}">
-                <input type="text" class="inline-input" placeholder="Die Trait" id="trait_die_${i}">
-                <input type="text" class="inline-input" placeholder="Call-on Trait" id="trait_call_${i}">
+            <div class="data-row" id="row_traits_${i}" style="border:none; padding:2px 0;">
+                <div class="grid-3col" style="flex-grow: 1;">
+                    <input type="text" class="inline-input" placeholder="Character Trait" id="trait_char_${i}">
+                    <input type="text" class="inline-input" placeholder="Die Trait" id="trait_die_${i}">
+                    <input type="text" class="inline-input" placeholder="Call-on Trait" id="trait_call_${i}">
+                </div>
+                <button class="btn-del" onclick="deleteRow('traits', ${i})">×</button>
             </div>`,
         relationships: (i) => `
-            <div class="grid-4col">
-                <input type="text" class="inline-input" placeholder="Relationship" id="rel_rel_${i}">
-                <input type="text" class="inline-input" placeholder="Circles" id="rel_cir_${i}">
-                <input type="text" class="inline-input" placeholder="Named Circle" id="rel_nam_${i}">
-                <input type="text" class="inline-input" placeholder="Enemy Circle" id="rel_ene_${i}">
+            <div class="data-row" id="row_relationships_${i}" style="border:none; padding:2px 0;">
+                <div class="grid-4col" style="flex-grow: 1;">
+                    <input type="text" class="inline-input" placeholder="Relationship" id="rel_rel_${i}">
+                    <input type="text" class="inline-input" placeholder="Circles" id="rel_cir_${i}">
+                    <input type="text" class="inline-input" placeholder="Named Circle" id="rel_nam_${i}">
+                    <input type="text" class="inline-input" placeholder="Enemy Circle" id="rel_ene_${i}">
+                </div>
+                <button class="btn-del" onclick="deleteRow('relationships', ${i})">×</button>
             </div>`,
         contacts: (i) => `
-            <div class="grid-4col">
-                <input type="text" class="inline-input" placeholder="Name" id="con_name_${i}">
-                <input type="text" class="inline-input" placeholder="Description" id="con_desc_${i}">
-                <input type="text" class="inline-input" placeholder="Aptitude" id="con_apt_${i}">
-                <input type="text" class="inline-input" placeholder="Times" id="con_time_${i}">
+            <div class="data-row" id="row_contacts_${i}" style="border:none; padding:2px 0;">
+                <div class="grid-4col" style="flex-grow: 1;">
+                    <input type="text" class="inline-input" placeholder="Name" id="con_name_${i}">
+                    <input type="text" class="inline-input" placeholder="Description" id="con_desc_${i}">
+                    <input type="text" class="inline-input" placeholder="Aptitude" id="con_apt_${i}">
+                    <input type="text" class="inline-input" placeholder="Times" id="con_time_${i}">
+                </div>
+                <button class="btn-del" onclick="deleteRow('contacts', ${i})">×</button>
             </div>`
     };
 
-    const defaultCounts = { skills: 18, traits: 6, relationships: 6, contacts: 6 };
+    // Default arrays of IDs to render on first load
+    const defaultIds = { 
+        skills: Array.from({length: 12}, (_, i) => i), // Start with 12 skill rows
+        traits: Array.from({length: 6}, (_, i) => i), 
+        relationships: Array.from({length: 6}, (_, i) => i), 
+        contacts: Array.from({length: 6}, (_, i) => i) 
+    };
 
     // --- INITIALIZATION ---
     document.addEventListener("DOMContentLoaded", () => {
         renderStaticBlocks();
         
-        // Render dynamic sections based on saved counts
+        // Render dynamic sections based on saved ID arrays
         ['skills', 'traits', 'relationships', 'contacts'].forEach(section => {
-            const count = parseInt(localStorage.getItem(pagePrefix + section + "_count")) || defaultCounts[section];
+            let ids = JSON.parse(localStorage.getItem(pagePrefix + section + "_ids"));
+            if (!ids || !Array.isArray(ids)) ids = defaultIds[section];
+            
             const container = document.getElementById(section + "_container");
-            for(let i = 0; i < count; i++) {
-                container.insertAdjacentHTML('beforeend', templates[section](i));
-            }
+            ids.forEach(id => container.insertAdjacentHTML('beforeend', templates[section](id)));
+            
+            // Save the verified state
+            localStorage.setItem(pagePrefix + section + "_ids", JSON.stringify(ids));
         });
 
-        // Bind all inputs to local storage
         bindAllInputs();
     });
 
-    // --- DYNAMIC ROW ADDITION ---
+    // --- DYNAMIC ROW LOGIC (ADD/DELETE) ---
     window.addNewRow = function(section) {
-        let count = parseInt(localStorage.getItem(pagePrefix + section + "_count")) || defaultCounts[section];
-        const container = document.getElementById(section + "_container");
+        let ids = JSON.parse(localStorage.getItem(pagePrefix + section + "_ids")) || defaultIds[section];
+        let newId = ids.length > 0 ? Math.max(...ids) + 1 : 0; // Create next highest ID
+        ids.push(newId);
         
-        // Append new HTML
-        container.insertAdjacentHTML('beforeend', templates[section](count));
+        localStorage.setItem(pagePrefix + section + "_ids", JSON.stringify(ids));
+        const container = document.getElementById(section + "_container");
+        container.insertAdjacentHTML('beforeend', templates[section](newId));
         
         // Bind the newly created inputs
-        const newInputs = container.lastElementChild.querySelectorAll("input, textarea");
-        newInputs.forEach(bindSingleInput);
+        const newRow = document.getElementById(`row_${section}_${newId}`);
+        newRow.querySelectorAll("input, textarea, select").forEach(bindSingleInput);
+    };
+
+    window.deleteRow = function(section, id) {
+        if(!confirm("Are you sure you want to delete this row?")) return;
         
-        // Increment and save count
-        count++;
-        localStorage.setItem(pagePrefix + section + "_count", count);
+        // Remove ID from tracking array
+        let ids = JSON.parse(localStorage.getItem(pagePrefix + section + "_ids"));
+        ids = ids.filter(i => i !== id);
+        localStorage.setItem(pagePrefix + section + "_ids", JSON.stringify(ids));
+        
+        // Remove from DOM
+        const row = document.getElementById(`row_${section}_${id}`);
+        if(row) row.remove();
+        
+        // Note: We don't strictly need to wipe the specific input keys from localStorage, 
+        // they will just sit dormant. But a full wipe data cleans everything.
     };
 
     // --- LOCAL STORAGE BINDING ---
     function bindAllInputs() {
-        const inputs = document.querySelectorAll("input, textarea");
+        const inputs = document.querySelectorAll("input, textarea, select");
         inputs.forEach(bindSingleInput);
     }
 
@@ -351,30 +403,14 @@
             else localStorage.setItem(storageKey, input.value);
         };
         
-        // Remove existing listener to prevent duplicates if called multiple times
         input.removeEventListener("change", saveFunc);
         input.removeEventListener("input", saveFunc);
-        
         input.addEventListener("change", saveFunc);
-        if(input.type !== "checkbox") input.addEventListener("input", saveFunc);
+        if(input.type !== "checkbox" && input.tagName !== "SELECT") input.addEventListener("input", saveFunc);
     }
 
-    // --- STATIC RENDERERS (To keep HTML clean) ---
+    // --- STATIC HTML GENERATION ---
     function renderStaticBlocks() {
-        // Artha Tracker
-        let arthaHtml = '';
-        for(let i=0; i<8; i++) {
-            arthaHtml += `<div style="border: 1px solid var(--border-color); padding: 5px; text-align: center;">
-                <input type="text" class="inline-input" placeholder="Skill/Action" id="artha_track_name_${i}" style="width: 90%; margin-bottom: 5px;">
-                <div class="bubbles" style="justify-content: center;">
-                    <label>F: <input type="number" id="artha_track_f_${i}" style="width: 25px;"></label>
-                    <label>P: <input type="number" id="artha_track_p_${i}" style="width: 25px;"></label>
-                    <label>D: <input type="number" id="artha_track_d_${i}" style="width: 25px;"></label>
-                </div>
-            </div>`;
-        }
-        document.getElementById("artha_tracker_container").innerHTML = arthaHtml;
-
         // Beliefs & Instincts
         for(let type of ['belief', 'instinct']) {
             let html = '';
@@ -420,6 +456,14 @@
         });
         document.getElementById("attributes_container").innerHTML = attrsHtml;
 
+        // Physical Tolerances Headers (Dropdowns)
+        let tolHtml = '<th class="bold">Tolerance</th>';
+        const tolOptions = '<option value="">-</option><option value="Su">Su</option><option value="Li">Li</option><option value="Mi">Mi</option><option value="Se">Se</option><option value="Tr">Tr</option><option value="Mo">Mo</option>';
+        for(let i=1; i<=16; i++) {
+            tolHtml += `<th><select id="tol_sel_${i}" title="Select Tolerance (Su, Li, Mi, etc)">${tolOptions}</select></th>`;
+        }
+        document.getElementById("tolerance_select_row").innerHTML = tolHtml;
+
         // Injury Row Checkboxes
         let injHtml = '<td class="bold">Injury</td>';
         for(let i=1; i<=16; i++) {
@@ -431,7 +475,7 @@
         }
         document.getElementById("injury_row").innerHTML = injHtml;
 
-        // Wound Tracker Table Rows
+        // Editable Wound Tracker
         const wounds = [
             {n: 'Superficial', p: '+1 Ob/2, -1D/3*'}, {n: 'Light', p: '-1D'}, {n: 'Midi', p: '-2D'},
             {n: 'Severe', p: '-3D'}, {n: 'Traumatic', p: '-4D'}, {n: 'Mortal', p: 'Incapacitated'}
@@ -439,7 +483,8 @@
         let woundHtml = '';
         wounds.forEach((w, i) => {
             let bg = i % 2 !== 0 ? 'class="bg-gray"' : '';
-            woundHtml += `<tr ${bg}><td class="bold">${w.n}</td><td>${w.p}</td>`;
+            woundHtml += `<tr ${bg}><td class="bold">${w.n}</td>
+                <td><input type="text" class="inline-input" id="wound_pen_${i}" value="${w.p}"></td>`;
             for(let j=0; j<5; j++) woundHtml += `<td><input type="text" class="inline-input" id="wound_${i}_${j}"></td>`;
             woundHtml += `</tr>`;
         });
