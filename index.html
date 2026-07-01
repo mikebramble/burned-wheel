@@ -127,6 +127,7 @@
 <body>
 
 <div class="sheet-container">
+    <!-- HEADER -->
     <div class="header">
         <input type="text" class="header-input" placeholder="CHARACTER NAME" id="char_name">
         <div class="header-details">
@@ -136,6 +137,7 @@
         </div>
     </div>
 
+    <!-- ARTHA & EPIPHANIES -->
     <h2 class="section-title-static" style="text-align: center;">Artha and Epiphanies</h2>
     <div class="grid-3col" style="text-align: center; margin-bottom: 15px;">
         <div>
@@ -160,6 +162,7 @@
     </div>
 
     <div class="grid-2col">
+        <!-- LEFT COLUMN -->
         <div>
             <h2 class="section-title-static">Beliefs</h2>
             <div id="beliefs_container"></div>
@@ -167,6 +170,7 @@
             <div id="instincts_container"></div>
         </div>
 
+        <!-- RIGHT COLUMN -->
         <div>
             <h2 class="section-title-static">Core Stats</h2>
             <div id="core_stats_container"></div>
@@ -179,12 +183,14 @@
         </div>
     </div>
 
+    <!-- DYNAMIC SECTION: SKILLS -->
     <div class="section-header-flex">
         <h2 class="section-title">Skills</h2>
         <button class="btn-add" onclick="addNewRow('skills')">+ Add Row</button>
     </div>
     <div id="skills_container" style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;"></div>
 
+    <!-- DYNAMIC SECTION: TRAITS -->
     <div class="section-header-flex">
         <h2 class="section-title">Traits</h2>
         <button class="btn-add" onclick="addNewRow('traits')">+ Add Row</button>
@@ -196,6 +202,7 @@
     </div>
     <div id="traits_container" style="display: flex; flex-direction: column; gap: 5px; margin-top: 5px;"></div>
 
+    <!-- DYNAMIC SECTION: RELATIONSHIPS -->
     <div class="section-header-flex">
         <h2 class="section-title">Relationships & Circles</h2>
         <button class="btn-add" onclick="addNewRow('relationships')">+ Add Row</button>
@@ -208,6 +215,7 @@
     </div>
     <div id="relationships_container" style="display: flex; flex-direction: column; gap: 5px; margin-top: 5px;"></div>
 
+    <!-- DYNAMIC SECTION: CONTACTS -->
     <div class="section-header-flex">
         <h2 class="section-title">Contacts</h2>
         <button class="btn-add" onclick="addNewRow('contacts')">+ Add Row</button>
@@ -220,18 +228,21 @@
     </div>
     <div id="contacts_container" style="display: flex; flex-direction: column; gap: 5px; margin-top: 5px;"></div>
 
+    <!-- PHYSICAL TOLERANCES & WOUND TRACKER -->
     <h2 class="section-title-static">Physical Tolerances & Wound Tracker</h2>
     <div style="overflow-x: auto;">
         <table class="bw-table">
             <tr id="tolerance_select_row">
-                </tr>
+                <!-- Populated via JS -->
+            </tr>
             <tr class="bg-gray">
                 <td class="bold">Coord</td>
                 <td>B1</td><td>B2</td><td>B3</td><td>B4</td><td>B5</td><td>B6</td><td>B7</td><td>B8</td>
                 <td>B9</td><td>B10</td><td>B11</td><td>B12</td><td>B13</td><td>B14</td><td>B15</td><td>B16</td>
             </tr>
             <tr id="injury_row">
-                </tr>
+                <!-- Populated via JS -->
+            </tr>
         </table>
     </div>
 
@@ -241,9 +252,11 @@
                 <th>Wound</th><th>Penalty</th><th>Obstacle Penalties</th><th>Wounded Dice</th>
                 <th>Injury Recovery</th><th>Injury Recovery</th><th>Injury Recovery</th>
             </tr>
-            </table>
+            <!-- Populated via JS -->
+        </table>
     </div>
 
+    <!-- WEAPONS & ARMOR -->
     <h2 class="section-title-static">Weapons and Armor</h2>
     <div class="grid-2col">
         <div id="weapons_container"></div>
@@ -255,6 +268,11 @@
         </div>
     </div>
 
+    <!-- NOTES -->
+    <h2 class="section-title-static">Notes</h2>
+    <textarea style="height: 250px;" id="notes_main" placeholder="Handbook rules, trait descriptions, campaign notes..."></textarea>
+
+    <!-- CONTROLS -->
     <div class="controls">
         <button onclick="window.print()">🖨️ Print / Save as PDF</button>
         <button onclick="exportJSON()">💾 Export to File</button>
@@ -442,11 +460,30 @@
         });
         document.getElementById("core_stats_container").innerHTML = statsHtml;
 
-        // Attributes
+        // Attributes (Updated format)
         const attrs = ['Health', 'Steel', 'Reflexes', 'Mortal Wound', 'Hesitation', 'Resources', 'Circles'];
         let attrsHtml = '';
         attrs.forEach((attr, i) => {
-            attrsHtml += `<div class="data-row"><span class="bold">${attr}:</span> <input type="text" class="inline-input exp-input" id="attr_exp_${i}" placeholder="Exp"></div>`;
+            let checkboxHtml = '';
+            
+            // Only add R/D/C checkboxes for specific attributes
+            if (['Health', 'Steel', 'Resources', 'Circles'].includes(attr)) {
+                checkboxHtml = `
+                <span class="bubbles">
+                    R: <input type="checkbox" id="attr_r1_${i}"><input type="checkbox" id="attr_r2_${i}"><input type="checkbox" id="attr_r3_${i}"><input type="checkbox" id="attr_r4_${i}">
+                    D: <input type="checkbox" id="attr_d1_${i}"><input type="checkbox" id="attr_d2_${i}"><input type="checkbox" id="attr_d3_${i}"><input type="checkbox" id="attr_d4_${i}">
+                    C: <input type="checkbox" id="attr_c1_${i}"><input type="checkbox" id="attr_c2_${i}"><input type="checkbox" id="attr_c3_${i}">
+                </span>`;
+            }
+
+            attrsHtml += `<div class="data-row">
+                <span style="display:flex; gap: 5px; align-items: center; width: 175px;">
+                    <span class="bold" style="width: 105px;">${attr}</span>
+                    <input type="text" class="inline-input shade-input" placeholder="B" id="attr_shade_${i}">
+                    <input type="text" class="inline-input exp-input" placeholder="#" id="attr_exp_${i}">
+                </span>
+                ${checkboxHtml}
+            </div>`;
         });
         document.getElementById("attributes_container").innerHTML = attrsHtml;
 
