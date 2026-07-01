@@ -40,7 +40,7 @@
     
     .inline-input {
         border: none; border-bottom: 1px solid var(--border-color); background: transparent;
-        font-family: inherit; font-size: inherit; color: inherit; padding: 2px 5px;
+        font-family: inherit; font-size: inherit; color: inherit; padding: 2px 5px; width: 100%; box-sizing: border-box;
     }
     .inline-input:focus { outline: none; border-bottom: 1px solid var(--accent); }
     .shade-input { width: 25px; text-align: center; font-weight: bold; text-transform: uppercase; }
@@ -50,11 +50,26 @@
     .grid-3col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
     .grid-4col { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; }
     
+    .section-header-flex {
+        display: flex; justify-content: space-between; align-items: flex-end;
+        border-bottom: 1px solid var(--accent); padding-bottom: 5px; margin-top: 30px;
+    }
     .section-title {
         font-family: 'Georgia', serif; color: var(--accent);
-        border-bottom: 1px solid var(--accent); padding-bottom: 5px;
-        margin-top: 30px; text-transform: uppercase;
+        margin: 0; text-transform: uppercase; font-size: 1.5em;
     }
+    .section-title-static {
+        font-family: 'Georgia', serif; color: var(--accent);
+        border-bottom: 1px solid var(--accent); padding-bottom: 5px;
+        margin-top: 30px; text-transform: uppercase; font-size: 1.5em;
+    }
+    
+    .btn-add {
+        background-color: #eaeaea; color: #333; border: 1px solid #ccc;
+        border-radius: 4px; padding: 4px 10px; cursor: pointer; font-size: 0.85em; font-weight: bold;
+    }
+    .btn-add:hover { background-color: #d4d4d4; }
+
     .data-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px dashed #e0e0e0; }
     .bubbles { display: flex; gap: 8px; align-items: center; font-size: 0.9em; }
     .bubbles label { display: flex; align-items: center; gap: 2px; cursor: pointer; }
@@ -75,348 +90,156 @@
     
     .bold { font-weight: bold; }
     .text-sm { font-size: 0.8em; color: #555; }
+    .text-center { text-align: center; }
     
     .controls { display: flex; justify-content: center; gap: 15px; margin-top: 40px; padding-top: 20px; border-top: 2px solid var(--border-color); }
-    button, .file-upload-label {
+    .controls button, .file-upload-label {
         padding: 10px 20px; background-color: var(--accent); color: white;
         border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-family: inherit; font-size: 1em;
     }
-    button:hover, .file-upload-label:hover { background-color: #631b1b; }
+    .controls button:hover, .file-upload-label:hover { background-color: #631b1b; }
     input[type="file"] { display: none; }
 
     @media print {
         body { background-color: white; padding: 0; }
         .sheet-container { box-shadow: none; border: none; padding: 0; max-width: 100%; }
-        .controls { display: none; }
+        .controls, .btn-add { display: none; }
         textarea { resize: none; overflow: hidden; }
+        .inline-input { border-bottom: 1px solid #ccc; }
     }
 </style>
 </head>
 <body>
 
 <div class="sheet-container">
-    <!-- HEADER -->
     <div class="header">
         <input type="text" class="header-input" placeholder="CHARACTER NAME" id="char_name">
         <div class="header-details">
-            <div><span class="bold">Stock:</span> <input type="text" class="inline-input" style="width: 100px;"></div>
-            <div><span class="bold">Age:</span> <input type="text" class="inline-input" style="width: 50px;"></div>
-            <div><span class="bold">Lifepaths:</span> <input type="text" class="inline-input" style="width: 400px;"></div>
+            <div><span class="bold">Stock:</span> <input type="text" class="inline-input" style="width: 100px;" id="char_stock"></div>
+            <div><span class="bold">Age:</span> <input type="text" class="inline-input" style="width: 50px;" id="char_age"></div>
+            <div><span class="bold">Lifepaths:</span> <input type="text" class="inline-input" style="width: 400px;" id="char_lifepaths"></div>
         </div>
     </div>
 
-    <!-- ARTHA & EPIPHANIES -->
-    <h2 class="section-title" style="text-align: center;">Artha and Epiphanies</h2>
+    <h2 class="section-title-static" style="text-align: center;">Artha and Epiphanies</h2>
     <div class="grid-3col" style="text-align: center; margin-bottom: 15px;">
         <div>
-            <div class="bold">Fate</div>
-            <div class="text-sm">Open-end 6s</div>
-            <input type="number" value="0">
+            <div class="bold">Fate</div><div class="text-sm">Open-end 6s</div>
+            <input type="number" value="0" id="artha_fate">
         </div>
         <div>
-            <div class="bold">Persona</div>
-            <div class="text-sm">+1D per point</div>
-            <input type="number" value="0">
+            <div class="bold">Persona</div><div class="text-sm">+1D per point</div>
+            <input type="number" value="0" id="artha_persona">
         </div>
         <div>
-            <div class="bold">Deeds</div>
-            <div class="text-sm">Double dice or reroll</div>
-            <input type="number" value="0">
+            <div class="bold">Deeds</div><div class="text-sm">Double dice or reroll</div>
+            <input type="number" value="0" id="artha_deeds">
         </div>
     </div>
     <div class="text-sm" style="text-align: center; margin-bottom: 20px;">
         <span class="bold">Epiphany (permanent shade shift):</span> 3 Deeds, 10 Persona, 20 Fate | 
         <span class="bold">Aristeia (temporary shade shift):</span> 1 Deeds, 3 Persona, 5 Fate
     </div>
-    <!-- Skill Artha Tracker -->
-    <div class="grid-4col">
-        <script>
-            for(let i=0; i<8; i++) {
-                document.write(`
-                <div style="border: 1px solid var(--border-color); padding: 5px; text-align: center;">
-                    <input type="text" class="inline-input" placeholder="Skill Name" style="width: 90%; margin-bottom: 5px;">
-                    <div class="bubbles" style="justify-content: center;">
-                        <label>F: <input type="number" style="width: 30px;"></label>
-                        <label>P: <input type="number" style="width: 30px;"></label>
-                        <label>D: <input type="number" style="width: 30px;"></label>
-                    </div>
-                </div>`);
-            }
-        </script>
-    </div>
+
+    <div class="grid-4col" id="artha_tracker_container">
+        </div>
 
     <div class="grid-2col">
-        <!-- LEFT COLUMN: BELIEFS & INSTINCTS -->
         <div>
-            <h2 class="section-title">Beliefs</h2>
-            <script>
-                for(let i=1; i<=3; i++) {
-                    document.write(`
-                    <div style="margin-bottom: 15px;">
-                        <div class="data-row"><span class="bold">Belief ${i}</span>
-                            <span class="bubbles">
-                                <label><input type="checkbox"> F</label>
-                                <label><input type="checkbox"> P</label>
-                                <label><input type="checkbox"> D</label>
-                            </span>
-                        </div>
-                        <textarea placeholder="Enter Belief ${i}..."></textarea>
-                    </div>`);
-                }
-            </script>
-            
-            <h2 class="section-title">Instincts</h2>
-            <script>
-                for(let i=1; i<=3; i++) {
-                    document.write(`
-                    <div style="margin-bottom: 15px;">
-                        <div class="data-row"><span class="bold">Instinct ${i}</span>
-                            <span class="bubbles">
-                                <label><input type="checkbox"> F</label>
-                                <label><input type="checkbox"> P</label>
-                                <label><input type="checkbox"> D</label>
-                            </span>
-                        </div>
-                        <textarea placeholder="Enter Instinct ${i}..."></textarea>
-                    </div>`);
-                }
-            </script>
+            <h2 class="section-title-static">Beliefs</h2>
+            <div id="beliefs_container"></div>
+            <h2 class="section-title-static">Instincts</h2>
+            <div id="instincts_container"></div>
         </div>
 
-        <!-- RIGHT COLUMN: CORE STATS & ATTRIBUTES -->
         <div>
-            <h2 class="section-title">Core Stats</h2>
-            <script>
-                const stats = ['Will', 'Power', 'Agility', 'Perception', 'Forte', 'Speed'];
-                stats.forEach(stat => {
-                    document.write(`
-                    <div class="data-row">
-                        <span style="display:flex; gap: 5px; align-items: center; width: 160px;">
-                            <span class="bold" style="width: 80px;">${stat}</span>
-                            <input type="text" class="inline-input shade-input" placeholder="B">
-                            <input type="text" class="inline-input exp-input" placeholder="#">
-                        </span>
-                        <span class="bubbles">
-                            R: <input type="checkbox"><input type="checkbox"><input type="checkbox"><input type="checkbox">
-                            D: <input type="checkbox"><input type="checkbox"><input type="checkbox"><input type="checkbox">
-                            C: <input type="checkbox"><input type="checkbox"><input type="checkbox">
-                        </span>
-                    </div>`);
-                });
-            </script>
+            <h2 class="section-title-static">Core Stats</h2>
+            <div id="core_stats_container"></div>
 
-            <h2 class="section-title">Attributes</h2>
-            <div class="data-row"><span class="bold">Health:</span> <input type="text" class="inline-input exp-input" placeholder="Exp"></div>
-            <div class="data-row"><span class="bold">Steel:</span> <input type="text" class="inline-input exp-input" placeholder="Exp"></div>
-            <div class="data-row"><span class="bold">Reflexes:</span> <input type="text" class="inline-input exp-input" placeholder="Exp"></div>
-            <div class="data-row"><span class="bold">Mortal Wound:</span> <input type="text" class="inline-input exp-input" placeholder="Exp"></div>
-            <div class="data-row"><span class="bold">Hesitation:</span> <input type="text" class="inline-input exp-input" placeholder="Exp"></div>
-            <div class="data-row"><span class="bold">Resources:</span> <input type="text" class="inline-input exp-input" placeholder="Exp"></div>
-            <div class="data-row"><span class="bold">Circles:</span> <input type="text" class="inline-input exp-input" placeholder="Exp"></div>
+            <h2 class="section-title-static">Attributes</h2>
+            <div id="attributes_container"></div>
         </div>
     </div>
 
-    <!-- SKILLS (1 COLUMN LIST) -->
-    <h2 class="section-title">Skills</h2>
-    <div style="display: flex; flex-direction: column; gap: 8px;">
-        <script>
-            for(let i=0; i<18; i++) {
-                document.write(`
-                <div class="data-row">
-                    <span style="display:flex; gap: 10px; align-items: center; width: 45%;">
-                        <input type="text" class="inline-input bold" placeholder="Skill Name" style="width: 70%;">
-                        <input type="text" class="inline-input shade-input" placeholder="B" title="Shade">
-                        <input type="text" class="inline-input exp-input" placeholder="#" title="Exp">
-                    </span>
-                    <span class="bubbles" style="width: 55%; justify-content: flex-end;">
-                        <span class="bold text-sm">R:</span> <input type="checkbox"><input type="checkbox"><input type="checkbox"><input type="checkbox"> 
-                        <span style="margin: 0 10px;">|</span>
-                        <span class="bold text-sm">D:</span> <input type="checkbox"><input type="checkbox"><input type="checkbox"><input type="checkbox">
-                        <span style="margin: 0 10px;">|</span>
-                        <span class="bold text-sm">C:</span> <input type="checkbox"><input type="checkbox"><input type="checkbox">
-                    </span>
-                </div>
-                `);
-            }
-        </script>
+    <div class="section-header-flex">
+        <h2 class="section-title">Skills</h2>
+        <button class="btn-add" onclick="addNewRow('skills')">+ Add Row</button>
+    </div>
+    <div id="skills_container" style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;"></div>
+
+    <div class="section-header-flex">
+        <h2 class="section-title">Traits</h2>
+        <button class="btn-add" onclick="addNewRow('traits')">+ Add Row</button>
+    </div>
+    <div class="grid-3col" style="margin-top: 10px; border-bottom: 1px solid #ccc; padding-bottom: 5px;">
+        <div class="bold text-center">Character</div>
+        <div class="bold text-center">Die</div>
+        <div class="bold text-center">Call-on</div>
+    </div>
+    <div id="traits_container" style="display: flex; flex-direction: column; gap: 5px; margin-top: 5px;"></div>
+
+    <div class="section-header-flex">
+        <h2 class="section-title">Relationships & Circles</h2>
+        <button class="btn-add" onclick="addNewRow('relationships')">+ Add Row</button>
+    </div>
+    <div class="grid-4col" style="margin-top: 10px; border-bottom: 1px solid #ccc; padding-bottom: 5px;">
+        <div class="bold text-center">Relationships</div>
+        <div class="bold text-center">Circles</div>
+        <div class="bold text-center">Named Circles</div>
+        <div class="bold text-center">Enemy Circles</div>
+    </div>
+    <div id="relationships_container" style="display: flex; flex-direction: column; gap: 5px; margin-top: 5px;"></div>
+
+    <div class="section-header-flex">
+        <h2 class="section-title">Contacts</h2>
+        <button class="btn-add" onclick="addNewRow('contacts')">+ Add Row</button>
+    </div>
+    <div class="grid-4col" style="margin-top: 10px; border-bottom: 1px solid #ccc; padding-bottom: 5px;">
+        <div class="bold text-center">Name</div>
+        <div class="bold text-center">Description</div>
+        <div class="bold text-center">Aptitude</div>
+        <div class="bold text-center">Times</div>
+    </div>
+    <div id="contacts_container" style="display: flex; flex-direction: column; gap: 5px; margin-top: 5px;"></div>
+
+    <h2 class="section-title-static">Physical Tolerances & Wound Tracker</h2>
+    <div style="overflow-x: auto;">
+        <table class="bw-table">
+            <tr>
+                <th>Tolerance</th><th></th><th>Su</th><th></th><th>Li</th><th></th><th>Mi</th><th>Se</th><th>Tr</th><th>Mo</th>
+                <th></th><th></th><th></th><th></th><th></th><th></th><th></th>
+            </tr>
+            <tr class="bg-gray">
+                <td class="bold">Coord</td>
+                <td>B1</td><td>B2</td><td>B3</td><td>B4</td><td>B5</td><td>B6</td><td>B7</td><td>B8</td>
+                <td>B9</td><td>B10</td><td>B11</td><td>B12</td><td>B13</td><td>B14</td><td>B15</td><td>B16</td>
+            </tr>
+            <tr id="injury_row"></tr>
+        </table>
     </div>
 
-    <!-- TRAITS, RELATIONSHIPS, CONTACTS -->
-    <h2 class="section-title">Traits</h2>
-    <div class="grid-3col">
-        <div>
-            <div class="bold text-center">Character</div>
-            <textarea style="height: 120px;"></textarea>
-        </div>
-        <div>
-            <div class="bold text-center">Die</div>
-            <textarea style="height: 120px;"></textarea>
-        </div>
-        <div>
-            <div class="bold text-center">Call-on</div>
-            <textarea style="height: 120px;"></textarea>
-        </div>
+    <div style="overflow-x: auto; margin-top: 15px;">
+        <table class="bw-table" id="wound_tracker_table">
+            <tr>
+                <th>Wound</th><th>Penalty</th><th>Obstacle Penalties</th><th>Wounded Dice</th>
+                <th>Injury Recovery</th><th>Injury Recovery</th><th>Injury Recovery</th>
+            </tr>
+        </table>
     </div>
 
-    <h2 class="section-title">Relationships & Circles</h2>
-    <div class="grid-4col">
-        <div><div class="bold text-center">Relationships</div><textarea style="height: 100px;"></textarea></div>
-        <div><div class="bold text-center">Circles</div><textarea style="height: 100px;"></textarea></div>
-        <div><div class="bold text-center">Named Circles</div><textarea style="height: 100px;"></textarea></div>
-        <div><div class="bold text-center">Enemy Circles</div><textarea style="height: 100px;"></textarea></div>
-    </div>
-
-    <h2 class="section-title">Contacts</h2>
-    <div class="grid-4col">
-        <div><div class="bold text-center">Name</div><textarea style="height: 80px;"></textarea></div>
-        <div><div class="bold text-center">Description</div><textarea style="height: 80px;"></textarea></div>
-        <div><div class="bold text-center">Aptitude</div><textarea style="height: 80px;"></textarea></div>
-        <div><div class="bold text-center">Times</div><textarea style="height: 80px;"></textarea></div>
-    </div>
-
-    <!-- PHYSICAL TOLERANCES & WOUND TRACKER -->
-    <h2 class="section-title">Physical Tolerances & Wound Tracker</h2>
-    
-    <table class="bw-table">
-        <tr>
-            <th>Tolerance</th>
-            <th></th><th>Su</th><th></th><th>Li</th><th></th><th>Mi</th><th>Se</th><th>Tr</th><th>Mo</th>
-            <th></th><th></th><th></th><th></th><th></th><th></th><th></th>
-        </tr>
-        <tr class="bg-gray">
-            <td class="bold">Coordinate</td>
-            <td>B1</td><td>B2</td><td>B3</td><td>B4</td><td>B5</td><td>B6</td><td>B7</td><td>B8</td>
-            <td>B9</td><td>B10</td><td>B11</td><td>B12</td><td>B13</td><td>B14</td><td>B15</td><td>B16</td>
-        </tr>
-        <tr>
-            <td class="bold">Injury</td>
-            <script>
-                for(let i=1; i<=16; i++) {
-                    document.write(`<td>
-                        <input type="checkbox" style="display:block; margin:2px auto;">
-                        <input type="checkbox" style="display:block; margin:2px auto;">
-                        <input type="checkbox" style="display:block; margin:2px auto;">
-                    </td>`);
-                }
-            </script>
-        </tr>
-    </table>
-
-    <table class="bw-table" style="margin-top: 15px;">
-        <tr>
-            <th>Wound</th><th>Penalty</th><th>Obstacle Penalties</th><th>Wounded Dice</th>
-            <th>Injury Recovery</th><th>Injury Recovery</th><th>Injury Recovery</th>
-        </tr>
-        <tr>
-            <td class="bold">Superficial</td><td>+1 Ob/2, -1D/3*</td>
-            <td><input type="text" class="inline-input" style="width: 100%;"></td>
-            <td><input type="text" class="inline-input" style="width: 100%;"></td>
-            <td><input type="text" class="inline-input" style="width: 100%;"></td>
-            <td><input type="text" class="inline-input" style="width: 100%;"></td>
-            <td><input type="text" class="inline-input" style="width: 100%;"></td>
-        </tr>
-        <tr class="bg-gray">
-            <td class="bold">Light</td><td>-1D</td>
-            <td><input type="text" class="inline-input" style="width: 100%;"></td>
-            <td><input type="text" class="inline-input" style="width: 100%;"></td>
-            <td><input type="text" class="inline-input" style="width: 100%;"></td>
-            <td><input type="text" class="inline-input" style="width: 100%;"></td>
-            <td><input type="text" class="inline-input" style="width: 100%;"></td>
-        </tr>
-        <tr>
-            <td class="bold">Midi</td><td>-2D</td>
-            <td><input type="text" class="inline-input" style="width: 100%;"></td>
-            <td><input type="text" class="inline-input" style="width: 100%;"></td>
-            <td><input type="text" class="inline-input" style="width: 100%;"></td>
-            <td><input type="text" class="inline-input" style="width: 100%;"></td>
-            <td><input type="text" class="inline-input" style="width: 100%;"></td>
-        </tr>
-        <tr class="bg-gray">
-            <td class="bold">Severe</td><td>-3D</td>
-            <td><input type="text" class="inline-input" style="width: 100%;"></td>
-            <td><input type="text" class="inline-input" style="width: 100%;"></td>
-            <td><input type="text" class="inline-input" style="width: 100%;"></td>
-            <td><input type="text" class="inline-input" style="width: 100%;"></td>
-            <td><input type="text" class="inline-input" style="width: 100%;"></td>
-        </tr>
-        <tr>
-            <td class="bold">Traumatic</td><td>-4D</td>
-            <td><input type="text" class="inline-input" style="width: 100%;"></td>
-            <td><input type="text" class="inline-input" style="width: 100%;"></td>
-            <td><input type="text" class="inline-input" style="width: 100%;"></td>
-            <td><input type="text" class="inline-input" style="width: 100%;"></td>
-            <td><input type="text" class="inline-input" style="width: 100%;"></td>
-        </tr>
-        <tr class="bg-gray">
-            <td class="bold">Mortal</td><td>Incapacitated</td>
-            <td><input type="text" class="inline-input" style="width: 100%;"></td>
-            <td><input type="text" class="inline-input" style="width: 100%;"></td>
-            <td><input type="text" class="inline-input" style="width: 100%;"></td>
-            <td><input type="text" class="inline-input" style="width: 100%;"></td>
-            <td><input type="text" class="inline-input" style="width: 100%;"></td>
-        </tr>
-    </table>
-
-    <!-- WEAPONS & ARMOR -->
-    <h2 class="section-title">Weapons and Armor</h2>
+    <h2 class="section-title-static">Weapons and Armor</h2>
     <div class="grid-2col">
+        <div id="weapons_container"></div>
         <div>
-            <table class="bw-table">
-                <tr><th colspan="7">MELEE WEAPONS</th></tr>
-                <tr class="text-sm"><th>Weapon</th><th>I</th><th>M</th><th>S</th><th>Add</th><th>VA</th><th>Length</th></tr>
-                <script>
-                    for(let i=0; i<4; i++) {
-                        document.write(`<tr>
-                            <td><input type="text" class="inline-input" style="width: 90%;"></td>
-                            <td><input type="text" class="inline-input" style="width: 20px;"></td>
-                            <td><input type="text" class="inline-input" style="width: 20px;"></td>
-                            <td><input type="text" class="inline-input" style="width: 20px;"></td>
-                            <td><input type="text" class="inline-input" style="width: 20px;"></td>
-                            <td><input type="text" class="inline-input" style="width: 20px;"></td>
-                            <td><input type="text" class="inline-input" style="width: 50px;"></td>
-                        </tr>`);
-                    }
-                </script>
-            </table>
-            
-            <table class="bw-table" style="margin-top: 15px;">
-                <tr><th colspan="7">MISSILE WEAPONS</th></tr>
-                <tr class="text-sm"><th>Weapon</th><th>I</th><th>M</th><th>S</th><th>VA</th><th>Ammo</th><th>DOF</th></tr>
-                <script>
-                    for(let i=0; i<3; i++) {
-                        document.write(`<tr>
-                            <td><input type="text" class="inline-input" style="width: 90%;"></td>
-                            <td><input type="text" class="inline-input" style="width: 20px;"></td>
-                            <td><input type="text" class="inline-input" style="width: 20px;"></td>
-                            <td><input type="text" class="inline-input" style="width: 20px;"></td>
-                            <td><input type="text" class="inline-input" style="width: 20px;"></td>
-                            <td><input type="text" class="inline-input" style="width: 40px;"></td>
-                            <td><input type="text" class="inline-input" style="width: 40px;"></td>
-                        </tr>`);
-                    }
-                </script>
-            </table>
-        </div>
-        
-        <div>
-            <table class="bw-table">
+            <table class="bw-table" id="armor_table">
                 <tr><th colspan="3">ARMOR</th></tr>
                 <tr><th>Location</th><th>Type</th><th>Dice</th></tr>
-                <tr><td class="bold">Head</td><td><input type="text" class="inline-input" style="width: 90%;"></td><td><input type="text" class="inline-input" style="width: 90%;"></td></tr>
-                <tr><td class="bold">Torso</td><td><input type="text" class="inline-input" style="width: 90%;"></td><td><input type="text" class="inline-input" style="width: 90%;"></td></tr>
-                <tr><td class="bold">Right Arm</td><td><input type="text" class="inline-input" style="width: 90%;"></td><td><input type="text" class="inline-input" style="width: 90%;"></td></tr>
-                <tr><td class="bold">Left Arm</td><td><input type="text" class="inline-input" style="width: 90%;"></td><td><input type="text" class="inline-input" style="width: 90%;"></td></tr>
-                <tr><td class="bold">Right Leg</td><td><input type="text" class="inline-input" style="width: 90%;"></td><td><input type="text" class="inline-input" style="width: 90%;"></td></tr>
-                <tr><td class="bold">Left Leg</td><td><input type="text" class="inline-input" style="width: 90%;"></td><td><input type="text" class="inline-input" style="width: 90%;"></td></tr>
-                <tr><td class="bold">Shield</td><td><input type="text" class="inline-input" style="width: 90%;"></td><td><input type="text" class="inline-input" style="width: 90%;"></td></tr>
             </table>
-            
-            <h3 class="section-title" style="font-size: 1.1em; border: none; margin-top: 15px;">Other Gear</h3>
-            <textarea style="height: 80px;" placeholder="Traveling gear, property, etc..."></textarea>
+            <h3 style="font-family: 'Georgia', serif; font-size: 1.1em; color: var(--accent); margin-top: 15px;">Other Gear</h3>
+            <textarea style="height: 120px;" id="other_gear" placeholder="Traveling gear, property, etc..."></textarea>
         </div>
     </div>
 
-    <!-- CONTROLS (Hidden on Print) -->
     <div class="controls">
         <button onclick="window.print()">🖨️ Print / Save as PDF</button>
         <button onclick="exportJSON()">💾 Export to File</button>
@@ -430,42 +253,242 @@
 </div>
 
 <script>
-    // System to auto-assign IDs and handle Local Storage
+    const pagePrefix = window.location.pathname + "_";
+
+    // --- TEMPLATES FOR DYNAMIC SECTIONS ---
+    const templates = {
+        skills: (i) => `
+            <div class="data-row">
+                <span style="display:flex; gap: 10px; align-items: center; width: 45%;">
+                    <input type="text" class="inline-input bold" placeholder="Skill Name" id="skill_name_${i}" style="width: 70%;">
+                    <input type="text" class="inline-input shade-input" placeholder="B" id="skill_shade_${i}" title="Shade">
+                    <input type="text" class="inline-input exp-input" placeholder="#" id="skill_exp_${i}" title="Exp">
+                </span>
+                <span class="bubbles" style="width: 55%; justify-content: flex-end;">
+                    <span class="bold text-sm">R:</span> <input type="checkbox" id="skill_r1_${i}"><input type="checkbox" id="skill_r2_${i}"><input type="checkbox" id="skill_r3_${i}"><input type="checkbox" id="skill_r4_${i}"> 
+                    <span style="margin: 0 5px;">|</span>
+                    <span class="bold text-sm">D:</span> <input type="checkbox" id="skill_d1_${i}"><input type="checkbox" id="skill_d2_${i}"><input type="checkbox" id="skill_d3_${i}"><input type="checkbox" id="skill_d4_${i}">
+                    <span style="margin: 0 5px;">|</span>
+                    <span class="bold text-sm">C:</span> <input type="checkbox" id="skill_c1_${i}"><input type="checkbox" id="skill_c2_${i}"><input type="checkbox" id="skill_c3_${i}">
+                </span>
+            </div>`,
+        traits: (i) => `
+            <div class="grid-3col">
+                <input type="text" class="inline-input" placeholder="Character Trait" id="trait_char_${i}">
+                <input type="text" class="inline-input" placeholder="Die Trait" id="trait_die_${i}">
+                <input type="text" class="inline-input" placeholder="Call-on Trait" id="trait_call_${i}">
+            </div>`,
+        relationships: (i) => `
+            <div class="grid-4col">
+                <input type="text" class="inline-input" placeholder="Relationship" id="rel_rel_${i}">
+                <input type="text" class="inline-input" placeholder="Circles" id="rel_cir_${i}">
+                <input type="text" class="inline-input" placeholder="Named Circle" id="rel_nam_${i}">
+                <input type="text" class="inline-input" placeholder="Enemy Circle" id="rel_ene_${i}">
+            </div>`,
+        contacts: (i) => `
+            <div class="grid-4col">
+                <input type="text" class="inline-input" placeholder="Name" id="con_name_${i}">
+                <input type="text" class="inline-input" placeholder="Description" id="con_desc_${i}">
+                <input type="text" class="inline-input" placeholder="Aptitude" id="con_apt_${i}">
+                <input type="text" class="inline-input" placeholder="Times" id="con_time_${i}">
+            </div>`
+    };
+
+    const defaultCounts = { skills: 18, traits: 6, relationships: 6, contacts: 6 };
+
+    // --- INITIALIZATION ---
     document.addEventListener("DOMContentLoaded", () => {
-        const pagePrefix = window.location.pathname + "_";
-        const inputs = document.querySelectorAll("input, textarea");
-
-        inputs.forEach((input, index) => {
-            const id = input.id || "bw_data_" + index;
-            input.id = id;
-            const storageKey = pagePrefix + id;
-
-            const savedValue = localStorage.getItem(storageKey);
-            if (savedValue !== null) {
-                if (input.type === "checkbox") {
-                    input.checked = (savedValue === "true");
-                } else {
-                    input.value = savedValue;
-                }
+        renderStaticBlocks();
+        
+        // Render dynamic sections based on saved counts
+        ['skills', 'traits', 'relationships', 'contacts'].forEach(section => {
+            const count = parseInt(localStorage.getItem(pagePrefix + section + "_count")) || defaultCounts[section];
+            const container = document.getElementById(section + "_container");
+            for(let i = 0; i < count; i++) {
+                container.insertAdjacentHTML('beforeend', templates[section](i));
             }
-
-            const saveFunc = () => {
-                if (input.type === "checkbox") {
-                    localStorage.setItem(storageKey, input.checked);
-                } else {
-                    localStorage.setItem(storageKey, input.value);
-                }
-            };
-            
-            input.addEventListener("change", saveFunc);
-            if(input.type !== "checkbox") input.addEventListener("input", saveFunc);
         });
+
+        // Bind all inputs to local storage
+        bindAllInputs();
     });
 
-    // Wipes Local Storage for this page
+    // --- DYNAMIC ROW ADDITION ---
+    window.addNewRow = function(section) {
+        let count = parseInt(localStorage.getItem(pagePrefix + section + "_count")) || defaultCounts[section];
+        const container = document.getElementById(section + "_container");
+        
+        // Append new HTML
+        container.insertAdjacentHTML('beforeend', templates[section](count));
+        
+        // Bind the newly created inputs
+        const newInputs = container.lastElementChild.querySelectorAll("input, textarea");
+        newInputs.forEach(bindSingleInput);
+        
+        // Increment and save count
+        count++;
+        localStorage.setItem(pagePrefix + section + "_count", count);
+    };
+
+    // --- LOCAL STORAGE BINDING ---
+    function bindAllInputs() {
+        const inputs = document.querySelectorAll("input, textarea");
+        inputs.forEach(bindSingleInput);
+    }
+
+    function bindSingleInput(input) {
+        if (!input.id) return;
+        const storageKey = pagePrefix + input.id;
+
+        const savedValue = localStorage.getItem(storageKey);
+        if (savedValue !== null) {
+            if (input.type === "checkbox") input.checked = (savedValue === "true");
+            else input.value = savedValue;
+        }
+
+        const saveFunc = () => {
+            if (input.type === "checkbox") localStorage.setItem(storageKey, input.checked);
+            else localStorage.setItem(storageKey, input.value);
+        };
+        
+        // Remove existing listener to prevent duplicates if called multiple times
+        input.removeEventListener("change", saveFunc);
+        input.removeEventListener("input", saveFunc);
+        
+        input.addEventListener("change", saveFunc);
+        if(input.type !== "checkbox") input.addEventListener("input", saveFunc);
+    }
+
+    // --- STATIC RENDERERS (To keep HTML clean) ---
+    function renderStaticBlocks() {
+        // Artha Tracker
+        let arthaHtml = '';
+        for(let i=0; i<8; i++) {
+            arthaHtml += `<div style="border: 1px solid var(--border-color); padding: 5px; text-align: center;">
+                <input type="text" class="inline-input" placeholder="Skill/Action" id="artha_track_name_${i}" style="width: 90%; margin-bottom: 5px;">
+                <div class="bubbles" style="justify-content: center;">
+                    <label>F: <input type="number" id="artha_track_f_${i}" style="width: 25px;"></label>
+                    <label>P: <input type="number" id="artha_track_p_${i}" style="width: 25px;"></label>
+                    <label>D: <input type="number" id="artha_track_d_${i}" style="width: 25px;"></label>
+                </div>
+            </div>`;
+        }
+        document.getElementById("artha_tracker_container").innerHTML = arthaHtml;
+
+        // Beliefs & Instincts
+        for(let type of ['belief', 'instinct']) {
+            let html = '';
+            for(let i=1; i<=3; i++) {
+                html += `<div style="margin-bottom: 15px;">
+                    <div class="data-row"><span class="bold">${type.charAt(0).toUpperCase() + type.slice(1)} ${i}</span>
+                        <span class="bubbles">
+                            <label><input type="checkbox" id="${type}_f_${i}"> F</label>
+                            <label><input type="checkbox" id="${type}_p_${i}"> P</label>
+                            <label><input type="checkbox" id="${type}_d_${i}"> D</label>
+                        </span>
+                    </div>
+                    <textarea id="${type}_text_${i}" placeholder="Enter ${type}..."></textarea>
+                </div>`;
+            }
+            document.getElementById(`${type}s_container`).innerHTML = html;
+        }
+
+        // Core Stats
+        const stats = ['Will', 'Power', 'Agility', 'Perception', 'Forte', 'Speed'];
+        let statsHtml = '';
+        stats.forEach((stat, i) => {
+            statsHtml += `<div class="data-row">
+                <span style="display:flex; gap: 5px; align-items: center; width: 160px;">
+                    <span class="bold" style="width: 80px;">${stat}</span>
+                    <input type="text" class="inline-input shade-input" placeholder="B" id="stat_shade_${i}">
+                    <input type="text" class="inline-input exp-input" placeholder="#" id="stat_exp_${i}">
+                </span>
+                <span class="bubbles">
+                    R: <input type="checkbox" id="stat_r1_${i}"><input type="checkbox" id="stat_r2_${i}"><input type="checkbox" id="stat_r3_${i}"><input type="checkbox" id="stat_r4_${i}">
+                    D: <input type="checkbox" id="stat_d1_${i}"><input type="checkbox" id="stat_d2_${i}"><input type="checkbox" id="stat_d3_${i}"><input type="checkbox" id="stat_d4_${i}">
+                    C: <input type="checkbox" id="stat_c1_${i}"><input type="checkbox" id="stat_c2_${i}"><input type="checkbox" id="stat_c3_${i}">
+                </span>
+            </div>`;
+        });
+        document.getElementById("core_stats_container").innerHTML = statsHtml;
+
+        // Attributes
+        const attrs = ['Health', 'Steel', 'Reflexes', 'Mortal Wound', 'Hesitation', 'Resources', 'Circles'];
+        let attrsHtml = '';
+        attrs.forEach((attr, i) => {
+            attrsHtml += `<div class="data-row"><span class="bold">${attr}:</span> <input type="text" class="inline-input exp-input" id="attr_exp_${i}" placeholder="Exp"></div>`;
+        });
+        document.getElementById("attributes_container").innerHTML = attrsHtml;
+
+        // Injury Row Checkboxes
+        let injHtml = '<td class="bold">Injury</td>';
+        for(let i=1; i<=16; i++) {
+            injHtml += `<td>
+                <input type="checkbox" id="inj_${i}_1" style="display:block; margin:2px auto;">
+                <input type="checkbox" id="inj_${i}_2" style="display:block; margin:2px auto;">
+                <input type="checkbox" id="inj_${i}_3" style="display:block; margin:2px auto;">
+            </td>`;
+        }
+        document.getElementById("injury_row").innerHTML = injHtml;
+
+        // Wound Tracker Table Rows
+        const wounds = [
+            {n: 'Superficial', p: '+1 Ob/2, -1D/3*'}, {n: 'Light', p: '-1D'}, {n: 'Midi', p: '-2D'},
+            {n: 'Severe', p: '-3D'}, {n: 'Traumatic', p: '-4D'}, {n: 'Mortal', p: 'Incapacitated'}
+        ];
+        let woundHtml = '';
+        wounds.forEach((w, i) => {
+            let bg = i % 2 !== 0 ? 'class="bg-gray"' : '';
+            woundHtml += `<tr ${bg}><td class="bold">${w.n}</td><td>${w.p}</td>`;
+            for(let j=0; j<5; j++) woundHtml += `<td><input type="text" class="inline-input" id="wound_${i}_${j}"></td>`;
+            woundHtml += `</tr>`;
+        });
+        document.getElementById("wound_tracker_table").insertAdjacentHTML('beforeend', woundHtml);
+
+        // Weapons
+        let wpnHtml = `<table class="bw-table"><tr><th colspan="7">MELEE WEAPONS</th></tr>
+            <tr class="text-sm"><th>Weapon</th><th>I</th><th>M</th><th>S</th><th>Add</th><th>VA</th><th>Length</th></tr>`;
+        for(let i=0; i<4; i++) {
+            wpnHtml += `<tr>
+                <td><input type="text" class="inline-input" id="mw_${i}_n"></td>
+                <td><input type="text" class="inline-input" id="mw_${i}_i" style="width:25px"></td>
+                <td><input type="text" class="inline-input" id="mw_${i}_m" style="width:25px"></td>
+                <td><input type="text" class="inline-input" id="mw_${i}_s" style="width:25px"></td>
+                <td><input type="text" class="inline-input" id="mw_${i}_a" style="width:25px"></td>
+                <td><input type="text" class="inline-input" id="mw_${i}_v" style="width:25px"></td>
+                <td><input type="text" class="inline-input" id="mw_${i}_l" style="width:40px"></td>
+            </tr>`;
+        }
+        wpnHtml += `</table><table class="bw-table" style="margin-top: 15px;"><tr><th colspan="7">MISSILE WEAPONS</th></tr>
+            <tr class="text-sm"><th>Weapon</th><th>I</th><th>M</th><th>S</th><th>VA</th><th>Ammo</th><th>DOF</th></tr>`;
+        for(let i=0; i<3; i++) {
+            wpnHtml += `<tr>
+                <td><input type="text" class="inline-input" id="rw_${i}_n"></td>
+                <td><input type="text" class="inline-input" id="rw_${i}_i" style="width:25px"></td>
+                <td><input type="text" class="inline-input" id="rw_${i}_m" style="width:25px"></td>
+                <td><input type="text" class="inline-input" id="rw_${i}_s" style="width:25px"></td>
+                <td><input type="text" class="inline-input" id="rw_${i}_v" style="width:25px"></td>
+                <td><input type="text" class="inline-input" id="rw_${i}_a" style="width:40px"></td>
+                <td><input type="text" class="inline-input" id="rw_${i}_d" style="width:40px"></td>
+            </tr>`;
+        }
+        wpnHtml += `</table>`;
+        document.getElementById("weapons_container").innerHTML = wpnHtml;
+
+        // Armor
+        const armors = ['Head', 'Torso', 'Right Arm', 'Left Arm', 'Right Leg', 'Left Leg', 'Shield'];
+        let armHtml = '';
+        armors.forEach((arm, i) => {
+            armHtml += `<tr><td class="bold">${arm}</td>
+                <td><input type="text" class="inline-input" id="armor_t_${i}"></td>
+                <td><input type="text" class="inline-input" id="armor_d_${i}"></td></tr>`;
+        });
+        document.getElementById("armor_table").insertAdjacentHTML('beforeend', armHtml);
+    }
+
+    // --- SYSTEM CONTROLS ---
     function clearData() {
         if(confirm("Are you sure you want to wipe all unsaved data? This cannot be undone.")) {
-            const pagePrefix = window.location.pathname + "_";
             const keysToRemove = [];
             for (let i = 0; i < localStorage.length; i++) {
                 const key = localStorage.key(i);
@@ -476,16 +499,12 @@
         }
     }
 
-    // Exports Local Storage to a downloadable JSON file
     function exportJSON() {
-        const pagePrefix = window.location.pathname + "_";
         const data = {};
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
             if (key.startsWith(pagePrefix)) {
-                // Remove the prefix so the file is clean and can be imported anywhere
-                const cleanKey = key.replace(pagePrefix, "");
-                data[cleanKey] = localStorage.getItem(key);
+                data[key.replace(pagePrefix, "")] = localStorage.getItem(key);
             }
         }
         
@@ -494,34 +513,26 @@
         const a = document.createElement('a');
         
         let charName = document.getElementById("char_name").value || "character";
-        charName = charName.toLowerCase().replace(/[^a-z0-9]/g, "_");
-        
+        a.download = charName.toLowerCase().replace(/[^a-z0-9]/g, "_") + "_burning_wheel.json";
         a.href = url;
-        a.download = charName + "_burning_wheel.json";
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
     }
 
-    // Imports a JSON file and populates Local Storage
     function importJSON(event) {
         const file = event.target.files[0];
         if (!file) return;
-        
         const reader = new FileReader();
         reader.onload = function(e) {
             try {
                 const data = JSON.parse(e.target.result);
-                const pagePrefix = window.location.pathname + "_";
-                
-                for (const key in data) {
-                    localStorage.setItem(pagePrefix + key, data[key]);
-                }
+                for (const key in data) localStorage.setItem(pagePrefix + key, data[key]);
                 alert("Character data imported successfully! The page will now reload.");
                 location.reload();
             } catch (error) {
-                alert("Error importing file. Make sure it is a valid JSON export from this sheet.");
+                alert("Error importing file. Make sure it is a valid JSON export.");
             }
         };
         reader.readAsText(file);
