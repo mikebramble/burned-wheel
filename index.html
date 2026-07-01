@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Generic Burning Wheel Character Sheet</title>
+<title>Burning Wheel Character Sheet</title>
 <style>
     :root {
         --bg-color: #f7f5f0;
@@ -20,7 +20,7 @@
         line-height: 1.5;
     }
     .sheet-container {
-        max-width: 1000px;
+        max-width: 1100px;
         margin: 0 auto;
         background: var(--card-bg);
         padding: 40px;
@@ -28,281 +28,415 @@
         border: 1px solid var(--border-color);
         border-radius: 4px;
     }
-    .header {
-        border-bottom: 3px solid var(--accent);
-        padding-bottom: 20px;
-        margin-bottom: 20px;
-        text-align: center;
-    }
+    .header { border-bottom: 3px solid var(--accent); padding-bottom: 20px; margin-bottom: 20px; text-align: center; }
     .header-input {
-        font-family: 'Georgia', serif;
-        font-size: 2.5em;
-        color: var(--accent);
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        text-align: center;
-        border: none;
-        border-bottom: 2px dashed var(--border-color);
-        background: transparent;
-        width: 80%;
-        margin-bottom: 15px;
+        font-family: 'Georgia', serif; font-size: 2.5em; color: var(--accent);
+        text-transform: uppercase; letter-spacing: 2px; text-align: center;
+        border: none; border-bottom: 2px dashed var(--border-color);
+        background: transparent; width: 80%; margin-bottom: 15px;
     }
     .header-input:focus { outline: none; border-bottom: 2px solid var(--accent); }
+    .header-details { display: flex; justify-content: center; gap: 20px; font-size: 1.1em; flex-wrap: wrap; }
     
-    .header-details {
-        display: flex;
-        justify-content: center;
-        gap: 20px;
-        font-size: 1.1em;
-        flex-wrap: wrap;
-    }
     .inline-input {
-        border: none;
-        border-bottom: 1px solid var(--border-color);
-        background: transparent;
-        font-family: inherit;
-        font-size: inherit;
-        color: inherit;
-        padding: 2px 5px;
+        border: none; border-bottom: 1px solid var(--border-color); background: transparent;
+        font-family: inherit; font-size: inherit; color: inherit; padding: 2px 5px;
     }
     .inline-input:focus { outline: none; border-bottom: 1px solid var(--accent); }
+    .shade-input { width: 25px; text-align: center; font-weight: bold; text-transform: uppercase; }
+    .exp-input { width: 35px; text-align: center; }
 
     .grid-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+    .grid-3col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
+    .grid-4col { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; }
     
     .section-title {
-        font-family: 'Georgia', serif;
-        color: var(--accent);
-        border-bottom: 1px solid var(--accent);
-        padding-bottom: 5px;
-        margin-top: 30px;
-        text-transform: uppercase;
+        font-family: 'Georgia', serif; color: var(--accent);
+        border-bottom: 1px solid var(--accent); padding-bottom: 5px;
+        margin-top: 30px; text-transform: uppercase;
     }
-    .data-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 6px 0;
-        border-bottom: 1px dashed #e0e0e0;
-    }
-    .bubbles { display: flex; gap: 10px; align-items: center; font-size: 0.9em; }
-    .bubbles label { display: flex; align-items: center; gap: 3px; cursor: pointer; }
+    .data-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px dashed #e0e0e0; }
+    .bubbles { display: flex; gap: 8px; align-items: center; font-size: 0.9em; }
+    .bubbles label { display: flex; align-items: center; gap: 2px; cursor: pointer; }
     
-    input[type="checkbox"] { accent-color: var(--accent); cursor: pointer; width: 16px; height: 16px; }
+    input[type="checkbox"] { accent-color: var(--accent); cursor: pointer; width: 14px; height: 14px; margin: 0; }
+    input[type="number"] { width: 50px; text-align: center; border: 1px solid var(--border-color); padding: 4px; }
     
     textarea {
-        width: 100%;
-        box-sizing: border-box;
-        border: 1px solid var(--border-color);
-        background: #fafafa;
-        padding: 8px;
-        font-family: inherit;
-        border-radius: 3px;
-        resize: vertical;
-        min-height: 50px;
+        width: 100%; box-sizing: border-box; border: 1px solid var(--border-color);
+        background: #fafafa; padding: 8px; font-family: inherit; border-radius: 3px;
+        resize: vertical; min-height: 60px; margin-top: 5px;
     }
+    
+    .bw-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9em; }
+    .bw-table th, .bw-table td { border: 1px solid var(--border-color); padding: 5px; text-align: center; }
+    .bw-table th { background-color: #f0f0f0; font-weight: bold; }
+    .bw-table .bg-gray { background-color: #e0e0e0; }
     
     .bold { font-weight: bold; }
+    .text-sm { font-size: 0.8em; color: #555; }
     
-    .btn-clear {
-        display: block;
-        margin: 40px auto 0;
-        padding: 10px 20px;
-        background-color: var(--accent);
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-weight: bold;
+    .controls { display: flex; justify-content: center; gap: 15px; margin-top: 40px; padding-top: 20px; border-top: 2px solid var(--border-color); }
+    button, .file-upload-label {
+        padding: 10px 20px; background-color: var(--accent); color: white;
+        border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-family: inherit; font-size: 1em;
     }
-    .btn-clear:hover { background-color: #631b1b; }
+    button:hover, .file-upload-label:hover { background-color: #631b1b; }
+    input[type="file"] { display: none; }
+
+    @media print {
+        body { background-color: white; padding: 0; }
+        .sheet-container { box-shadow: none; border: none; padding: 0; max-width: 100%; }
+        .controls { display: none; }
+        textarea { resize: none; overflow: hidden; }
+    }
 </style>
 </head>
 <body>
 
 <div class="sheet-container">
+    <!-- HEADER -->
     <div class="header">
-        <input type="text" class="header-input" placeholder="CHARACTER NAME">
+        <input type="text" class="header-input" placeholder="CHARACTER NAME" id="char_name">
         <div class="header-details">
-            <div><span class="bold">Stock:</span> <input type="text" class="inline-input" placeholder="e.g. Man" style="width: 100px;"></div>
-            <div><span class="bold">Age:</span> <input type="text" class="inline-input" placeholder="#" style="width: 50px;"></div>
-            <div><span class="bold">Lifepaths:</span> <input type="text" class="inline-input" placeholder="List Lifepaths..." style="width: 400px;"></div>
+            <div><span class="bold">Stock:</span> <input type="text" class="inline-input" style="width: 100px;"></div>
+            <div><span class="bold">Age:</span> <input type="text" class="inline-input" style="width: 50px;"></div>
+            <div><span class="bold">Lifepaths:</span> <input type="text" class="inline-input" style="width: 400px;"></div>
         </div>
     </div>
 
-    <div class="grid-2col">
-        <!-- LEFT COLUMN -->
+    <!-- ARTHA & EPIPHANIES -->
+    <h2 class="section-title" style="text-align: center;">Artha and Epiphanies</h2>
+    <div class="grid-3col" style="text-align: center; margin-bottom: 15px;">
         <div>
-            <h2 class="section-title">Beliefs & Instincts</h2>
-            <!-- Loop for 3 Beliefs -->
-            <div style="margin-bottom: 20px;">
-                <div class="data-row"><span class="bold">Belief 1</span>
-                    <span class="bubbles"><label><input type="checkbox"> F</label><label><input type="checkbox"> P</label><label><input type="checkbox"> D</label></span>
-                </div>
-                <textarea placeholder="Enter Belief..."></textarea>
-                <div class="data-row"><span class="bold">Belief 2</span>
-                    <span class="bubbles"><label><input type="checkbox"> F</label><label><input type="checkbox"> P</label><label><input type="checkbox"> D</label></span>
-                </div>
-                <textarea placeholder="Enter Belief..."></textarea>
-                <div class="data-row"><span class="bold">Belief 3</span>
-                    <span class="bubbles"><label><input type="checkbox"> F</label><label><input type="checkbox"> P</label><label><input type="checkbox"> D</label></span>
-                </div>
-                <textarea placeholder="Enter Belief..."></textarea>
-            </div>
+            <div class="bold">Fate</div>
+            <div class="text-sm">Open-end 6s</div>
+            <input type="number" value="0">
+        </div>
+        <div>
+            <div class="bold">Persona</div>
+            <div class="text-sm">+1D per point</div>
+            <input type="number" value="0">
+        </div>
+        <div>
+            <div class="bold">Deeds</div>
+            <div class="text-sm">Double dice or reroll</div>
+            <input type="number" value="0">
+        </div>
+    </div>
+    <div class="text-sm" style="text-align: center; margin-bottom: 20px;">
+        <span class="bold">Epiphany (permanent shade shift):</span> 3 Deeds, 10 Persona, 20 Fate | 
+        <span class="bold">Aristeia (temporary shade shift):</span> 1 Deeds, 3 Persona, 5 Fate
+    </div>
+    <!-- Skill Artha Tracker -->
+    <div class="grid-4col">
+        <script>
+            for(let i=0; i<8; i++) {
+                document.write(`
+                <div style="border: 1px solid var(--border-color); padding: 5px; text-align: center;">
+                    <input type="text" class="inline-input" placeholder="Skill Name" style="width: 90%; margin-bottom: 5px;">
+                    <div class="bubbles" style="justify-content: center;">
+                        <label>F: <input type="number" style="width: 30px;"></label>
+                        <label>P: <input type="number" style="width: 30px;"></label>
+                        <label>D: <input type="number" style="width: 30px;"></label>
+                    </div>
+                </div>`);
+            }
+        </script>
+    </div>
+
+    <div class="grid-2col">
+        <!-- LEFT COLUMN: BELIEFS & INSTINCTS -->
+        <div>
+            <h2 class="section-title">Beliefs</h2>
+            <script>
+                for(let i=1; i<=3; i++) {
+                    document.write(`
+                    <div style="margin-bottom: 15px;">
+                        <div class="data-row"><span class="bold">Belief ${i}</span>
+                            <span class="bubbles">
+                                <label><input type="checkbox"> F</label>
+                                <label><input type="checkbox"> P</label>
+                                <label><input type="checkbox"> D</label>
+                            </span>
+                        </div>
+                        <textarea placeholder="Enter Belief ${i}..."></textarea>
+                    </div>`);
+                }
+            </script>
             
-            <h2 class="section-title">Traits</h2>
-            <div style="display:flex; flex-direction:column; gap:5px;">
-                <input type="text" class="inline-input" placeholder="Trait Name (Type)">
-                <input type="text" class="inline-input" placeholder="Trait Name (Type)">
-                <input type="text" class="inline-input" placeholder="Trait Name (Type)">
-                <input type="text" class="inline-input" placeholder="Trait Name (Type)">
-                <input type="text" class="inline-input" placeholder="Trait Name (Type)">
-                <input type="text" class="inline-input" placeholder="Trait Name (Type)">
-            </div>
+            <h2 class="section-title">Instincts</h2>
+            <script>
+                for(let i=1; i<=3; i++) {
+                    document.write(`
+                    <div style="margin-bottom: 15px;">
+                        <div class="data-row"><span class="bold">Instinct ${i}</span>
+                            <span class="bubbles">
+                                <label><input type="checkbox"> F</label>
+                                <label><input type="checkbox"> P</label>
+                                <label><input type="checkbox"> D</label>
+                            </span>
+                        </div>
+                        <textarea placeholder="Enter Instinct ${i}..."></textarea>
+                    </div>`);
+                }
+            </script>
         </div>
 
-        <!-- RIGHT COLUMN -->
+        <!-- RIGHT COLUMN: CORE STATS & ATTRIBUTES -->
         <div>
-            <h2 class="section-title">Artha Pool</h2>
-            <div class="data-row"><span class="bold">Fate</span>
-                <span class="bubbles"><input type="checkbox"><input type="checkbox"><input type="checkbox"><input type="checkbox"><input type="checkbox"><input type="checkbox"><input type="checkbox"><input type="checkbox"></span>
-            </div>
-            <div class="data-row"><span class="bold">Persona</span>
-                <span class="bubbles"><input type="checkbox"><input type="checkbox"><input type="checkbox"><input type="checkbox"><input type="checkbox"><input type="checkbox"><input type="checkbox"><input type="checkbox"></span>
-            </div>
-            <div class="data-row"><span class="bold">Deeds</span>
-                <span class="bubbles"><input type="checkbox"><input type="checkbox"><input type="checkbox"><input type="checkbox"><input type="checkbox"></span>
-            </div>
+            <h2 class="section-title">Core Stats</h2>
+            <script>
+                const stats = ['Will', 'Power', 'Agility', 'Perception', 'Forte', 'Speed'];
+                stats.forEach(stat => {
+                    document.write(`
+                    <div class="data-row">
+                        <span style="display:flex; gap: 5px; align-items: center; width: 160px;">
+                            <span class="bold" style="width: 80px;">${stat}</span>
+                            <input type="text" class="inline-input shade-input" placeholder="B">
+                            <input type="text" class="inline-input exp-input" placeholder="#">
+                        </span>
+                        <span class="bubbles">
+                            R: <input type="checkbox"><input type="checkbox"><input type="checkbox"><input type="checkbox">
+                            D: <input type="checkbox"><input type="checkbox"><input type="checkbox"><input type="checkbox">
+                            C: <input type="checkbox"><input type="checkbox"><input type="checkbox">
+                        </span>
+                    </div>`);
+                });
+            </script>
 
             <h2 class="section-title">Attributes</h2>
-            <div class="data-row"><span class="bold">Health:</span> <input type="text" class="inline-input" style="width:50px; text-align:center;" placeholder="Exp"></div>
-            <div class="data-row"><span class="bold">Steel:</span> <input type="text" class="inline-input" style="width:50px; text-align:center;" placeholder="Exp"></div>
-            <div class="data-row"><span class="bold">Reflexes:</span> <input type="text" class="inline-input" style="width:50px; text-align:center;" placeholder="Exp"></div>
-            <div class="data-row"><span class="bold">Mortal Wound:</span> <input type="text" class="inline-input" style="width:50px; text-align:center;" placeholder="Exp"></div>
-            <div class="data-row"><span class="bold">Hesitation:</span> <input type="text" class="inline-input" style="width:50px; text-align:center;" placeholder="Exp"></div>
-
-            <h2 class="section-title">Gear & Possessions</h2>
-            <textarea style="height: 120px;" placeholder="List your weapons, armor, property, and personal effects here..."></textarea>
+            <div class="data-row"><span class="bold">Health:</span> <input type="text" class="inline-input exp-input" placeholder="Exp"></div>
+            <div class="data-row"><span class="bold">Steel:</span> <input type="text" class="inline-input exp-input" placeholder="Exp"></div>
+            <div class="data-row"><span class="bold">Reflexes:</span> <input type="text" class="inline-input exp-input" placeholder="Exp"></div>
+            <div class="data-row"><span class="bold">Mortal Wound:</span> <input type="text" class="inline-input exp-input" placeholder="Exp"></div>
+            <div class="data-row"><span class="bold">Hesitation:</span> <input type="text" class="inline-input exp-input" placeholder="Exp"></div>
+            <div class="data-row"><span class="bold">Resources:</span> <input type="text" class="inline-input exp-input" placeholder="Exp"></div>
+            <div class="data-row"><span class="bold">Circles:</span> <input type="text" class="inline-input exp-input" placeholder="Exp"></div>
         </div>
     </div>
 
-    <!-- FULL WIDTH SECTIONS -->
-    <h2 class="section-title">Core Stats</h2>
+    <!-- SKILLS (1 COLUMN LIST) -->
+    <h2 class="section-title">Skills</h2>
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+        <script>
+            for(let i=0; i<18; i++) {
+                document.write(`
+                <div class="data-row">
+                    <span style="display:flex; gap: 10px; align-items: center; width: 45%;">
+                        <input type="text" class="inline-input bold" placeholder="Skill Name" style="width: 70%;">
+                        <input type="text" class="inline-input shade-input" placeholder="B" title="Shade">
+                        <input type="text" class="inline-input exp-input" placeholder="#" title="Exp">
+                    </span>
+                    <span class="bubbles" style="width: 55%; justify-content: flex-end;">
+                        <span class="bold text-sm">R:</span> <input type="checkbox"><input type="checkbox"><input type="checkbox"><input type="checkbox"> 
+                        <span style="margin: 0 10px;">|</span>
+                        <span class="bold text-sm">D:</span> <input type="checkbox"><input type="checkbox"><input type="checkbox"><input type="checkbox">
+                        <span style="margin: 0 10px;">|</span>
+                        <span class="bold text-sm">C:</span> <input type="checkbox"><input type="checkbox"><input type="checkbox">
+                    </span>
+                </div>
+                `);
+            }
+        </script>
+    </div>
+
+    <!-- TRAITS, RELATIONSHIPS, CONTACTS -->
+    <h2 class="section-title">Traits</h2>
+    <div class="grid-3col">
+        <div>
+            <div class="bold text-center">Character</div>
+            <textarea style="height: 120px;"></textarea>
+        </div>
+        <div>
+            <div class="bold text-center">Die</div>
+            <textarea style="height: 120px;"></textarea>
+        </div>
+        <div>
+            <div class="bold text-center">Call-on</div>
+            <textarea style="height: 120px;"></textarea>
+        </div>
+    </div>
+
+    <h2 class="section-title">Relationships & Circles</h2>
+    <div class="grid-4col">
+        <div><div class="bold text-center">Relationships</div><textarea style="height: 100px;"></textarea></div>
+        <div><div class="bold text-center">Circles</div><textarea style="height: 100px;"></textarea></div>
+        <div><div class="bold text-center">Named Circles</div><textarea style="height: 100px;"></textarea></div>
+        <div><div class="bold text-center">Enemy Circles</div><textarea style="height: 100px;"></textarea></div>
+    </div>
+
+    <h2 class="section-title">Contacts</h2>
+    <div class="grid-4col">
+        <div><div class="bold text-center">Name</div><textarea style="height: 80px;"></textarea></div>
+        <div><div class="bold text-center">Description</div><textarea style="height: 80px;"></textarea></div>
+        <div><div class="bold text-center">Aptitude</div><textarea style="height: 80px;"></textarea></div>
+        <div><div class="bold text-center">Times</div><textarea style="height: 80px;"></textarea></div>
+    </div>
+
+    <!-- PHYSICAL TOLERANCES & WOUND TRACKER -->
+    <h2 class="section-title">Physical Tolerances & Wound Tracker</h2>
+    
+    <table class="bw-table">
+        <tr>
+            <th>Tolerance</th>
+            <th></th><th>Su</th><th></th><th>Li</th><th></th><th>Mi</th><th>Se</th><th>Tr</th><th>Mo</th>
+            <th></th><th></th><th></th><th></th><th></th><th></th><th></th>
+        </tr>
+        <tr class="bg-gray">
+            <td class="bold">Coordinate</td>
+            <td>B1</td><td>B2</td><td>B3</td><td>B4</td><td>B5</td><td>B6</td><td>B7</td><td>B8</td>
+            <td>B9</td><td>B10</td><td>B11</td><td>B12</td><td>B13</td><td>B14</td><td>B15</td><td>B16</td>
+        </tr>
+        <tr>
+            <td class="bold">Injury</td>
+            <script>
+                for(let i=1; i<=16; i++) {
+                    document.write(`<td>
+                        <input type="checkbox" style="display:block; margin:2px auto;">
+                        <input type="checkbox" style="display:block; margin:2px auto;">
+                        <input type="checkbox" style="display:block; margin:2px auto;">
+                    </td>`);
+                }
+            </script>
+        </tr>
+    </table>
+
+    <table class="bw-table" style="margin-top: 15px;">
+        <tr>
+            <th>Wound</th><th>Penalty</th><th>Obstacle Penalties</th><th>Wounded Dice</th>
+            <th>Injury Recovery</th><th>Injury Recovery</th><th>Injury Recovery</th>
+        </tr>
+        <tr>
+            <td class="bold">Superficial</td><td>+1 Ob/2, -1D/3*</td>
+            <td><input type="text" class="inline-input" style="width: 100%;"></td>
+            <td><input type="text" class="inline-input" style="width: 100%;"></td>
+            <td><input type="text" class="inline-input" style="width: 100%;"></td>
+            <td><input type="text" class="inline-input" style="width: 100%;"></td>
+            <td><input type="text" class="inline-input" style="width: 100%;"></td>
+        </tr>
+        <tr class="bg-gray">
+            <td class="bold">Light</td><td>-1D</td>
+            <td><input type="text" class="inline-input" style="width: 100%;"></td>
+            <td><input type="text" class="inline-input" style="width: 100%;"></td>
+            <td><input type="text" class="inline-input" style="width: 100%;"></td>
+            <td><input type="text" class="inline-input" style="width: 100%;"></td>
+            <td><input type="text" class="inline-input" style="width: 100%;"></td>
+        </tr>
+        <tr>
+            <td class="bold">Midi</td><td>-2D</td>
+            <td><input type="text" class="inline-input" style="width: 100%;"></td>
+            <td><input type="text" class="inline-input" style="width: 100%;"></td>
+            <td><input type="text" class="inline-input" style="width: 100%;"></td>
+            <td><input type="text" class="inline-input" style="width: 100%;"></td>
+            <td><input type="text" class="inline-input" style="width: 100%;"></td>
+        </tr>
+        <tr class="bg-gray">
+            <td class="bold">Severe</td><td>-3D</td>
+            <td><input type="text" class="inline-input" style="width: 100%;"></td>
+            <td><input type="text" class="inline-input" style="width: 100%;"></td>
+            <td><input type="text" class="inline-input" style="width: 100%;"></td>
+            <td><input type="text" class="inline-input" style="width: 100%;"></td>
+            <td><input type="text" class="inline-input" style="width: 100%;"></td>
+        </tr>
+        <tr>
+            <td class="bold">Traumatic</td><td>-4D</td>
+            <td><input type="text" class="inline-input" style="width: 100%;"></td>
+            <td><input type="text" class="inline-input" style="width: 100%;"></td>
+            <td><input type="text" class="inline-input" style="width: 100%;"></td>
+            <td><input type="text" class="inline-input" style="width: 100%;"></td>
+            <td><input type="text" class="inline-input" style="width: 100%;"></td>
+        </tr>
+        <tr class="bg-gray">
+            <td class="bold">Mortal</td><td>Incapacitated</td>
+            <td><input type="text" class="inline-input" style="width: 100%;"></td>
+            <td><input type="text" class="inline-input" style="width: 100%;"></td>
+            <td><input type="text" class="inline-input" style="width: 100%;"></td>
+            <td><input type="text" class="inline-input" style="width: 100%;"></td>
+            <td><input type="text" class="inline-input" style="width: 100%;"></td>
+        </tr>
+    </table>
+
+    <!-- WEAPONS & ARMOR -->
+    <h2 class="section-title">Weapons and Armor</h2>
     <div class="grid-2col">
-        <!-- Generic Stat Blocks x 6 -->
-        <div class="data-row">
-            <span style="display:flex; gap: 5px;">
-                <input type="text" class="inline-input bold" placeholder="Stat Name" style="width: 100px;">
-                <input type="text" class="inline-input" placeholder="Exp" style="width: 30px; text-align: center;">
-            </span>
-            <span class="bubbles">
-                R: <input type="checkbox"><input type="checkbox"><input type="checkbox">
-                D: <input type="checkbox"><input type="checkbox">
-                C: <input type="checkbox"><input type="checkbox">
-            </span>
+        <div>
+            <table class="bw-table">
+                <tr><th colspan="7">MELEE WEAPONS</th></tr>
+                <tr class="text-sm"><th>Weapon</th><th>I</th><th>M</th><th>S</th><th>Add</th><th>VA</th><th>Length</th></tr>
+                <script>
+                    for(let i=0; i<4; i++) {
+                        document.write(`<tr>
+                            <td><input type="text" class="inline-input" style="width: 90%;"></td>
+                            <td><input type="text" class="inline-input" style="width: 20px;"></td>
+                            <td><input type="text" class="inline-input" style="width: 20px;"></td>
+                            <td><input type="text" class="inline-input" style="width: 20px;"></td>
+                            <td><input type="text" class="inline-input" style="width: 20px;"></td>
+                            <td><input type="text" class="inline-input" style="width: 20px;"></td>
+                            <td><input type="text" class="inline-input" style="width: 50px;"></td>
+                        </tr>`);
+                    }
+                </script>
+            </table>
+            
+            <table class="bw-table" style="margin-top: 15px;">
+                <tr><th colspan="7">MISSILE WEAPONS</th></tr>
+                <tr class="text-sm"><th>Weapon</th><th>I</th><th>M</th><th>S</th><th>VA</th><th>Ammo</th><th>DOF</th></tr>
+                <script>
+                    for(let i=0; i<3; i++) {
+                        document.write(`<tr>
+                            <td><input type="text" class="inline-input" style="width: 90%;"></td>
+                            <td><input type="text" class="inline-input" style="width: 20px;"></td>
+                            <td><input type="text" class="inline-input" style="width: 20px;"></td>
+                            <td><input type="text" class="inline-input" style="width: 20px;"></td>
+                            <td><input type="text" class="inline-input" style="width: 20px;"></td>
+                            <td><input type="text" class="inline-input" style="width: 40px;"></td>
+                            <td><input type="text" class="inline-input" style="width: 40px;"></td>
+                        </tr>`);
+                    }
+                </script>
+            </table>
         </div>
-        <div class="data-row">
-            <span style="display:flex; gap: 5px;">
-                <input type="text" class="inline-input bold" placeholder="Stat Name" style="width: 100px;">
-                <input type="text" class="inline-input" placeholder="Exp" style="width: 30px; text-align: center;">
-            </span>
-            <span class="bubbles">
-                R: <input type="checkbox"><input type="checkbox"><input type="checkbox">
-                D: <input type="checkbox"><input type="checkbox">
-                C: <input type="checkbox"><input type="checkbox">
-            </span>
-        </div>
-        <div class="data-row">
-            <span style="display:flex; gap: 5px;">
-                <input type="text" class="inline-input bold" placeholder="Stat Name" style="width: 100px;">
-                <input type="text" class="inline-input" placeholder="Exp" style="width: 30px; text-align: center;">
-            </span>
-            <span class="bubbles">
-                R: <input type="checkbox"><input type="checkbox"><input type="checkbox">
-                D: <input type="checkbox"><input type="checkbox">
-                C: <input type="checkbox"><input type="checkbox">
-            </span>
-        </div>
-        <div class="data-row">
-            <span style="display:flex; gap: 5px;">
-                <input type="text" class="inline-input bold" placeholder="Stat Name" style="width: 100px;">
-                <input type="text" class="inline-input" placeholder="Exp" style="width: 30px; text-align: center;">
-            </span>
-            <span class="bubbles">
-                R: <input type="checkbox"><input type="checkbox"><input type="checkbox">
-                D: <input type="checkbox"><input type="checkbox">
-                C: <input type="checkbox"><input type="checkbox">
-            </span>
-        </div>
-        <div class="data-row">
-            <span style="display:flex; gap: 5px;">
-                <input type="text" class="inline-input bold" placeholder="Stat Name" style="width: 100px;">
-                <input type="text" class="inline-input" placeholder="Exp" style="width: 30px; text-align: center;">
-            </span>
-            <span class="bubbles">
-                R: <input type="checkbox"><input type="checkbox"><input type="checkbox">
-                D: <input type="checkbox"><input type="checkbox">
-                C: <input type="checkbox"><input type="checkbox">
-            </span>
-        </div>
-        <div class="data-row">
-            <span style="display:flex; gap: 5px;">
-                <input type="text" class="inline-input bold" placeholder="Stat Name" style="width: 100px;">
-                <input type="text" class="inline-input" placeholder="Exp" style="width: 30px; text-align: center;">
-            </span>
-            <span class="bubbles">
-                R: <input type="checkbox"><input type="checkbox"><input type="checkbox">
-                D: <input type="checkbox"><input type="checkbox">
-                C: <input type="checkbox"><input type="checkbox">
-            </span>
+        
+        <div>
+            <table class="bw-table">
+                <tr><th colspan="3">ARMOR</th></tr>
+                <tr><th>Location</th><th>Type</th><th>Dice</th></tr>
+                <tr><td class="bold">Head</td><td><input type="text" class="inline-input" style="width: 90%;"></td><td><input type="text" class="inline-input" style="width: 90%;"></td></tr>
+                <tr><td class="bold">Torso</td><td><input type="text" class="inline-input" style="width: 90%;"></td><td><input type="text" class="inline-input" style="width: 90%;"></td></tr>
+                <tr><td class="bold">Right Arm</td><td><input type="text" class="inline-input" style="width: 90%;"></td><td><input type="text" class="inline-input" style="width: 90%;"></td></tr>
+                <tr><td class="bold">Left Arm</td><td><input type="text" class="inline-input" style="width: 90%;"></td><td><input type="text" class="inline-input" style="width: 90%;"></td></tr>
+                <tr><td class="bold">Right Leg</td><td><input type="text" class="inline-input" style="width: 90%;"></td><td><input type="text" class="inline-input" style="width: 90%;"></td></tr>
+                <tr><td class="bold">Left Leg</td><td><input type="text" class="inline-input" style="width: 90%;"></td><td><input type="text" class="inline-input" style="width: 90%;"></td></tr>
+                <tr><td class="bold">Shield</td><td><input type="text" class="inline-input" style="width: 90%;"></td><td><input type="text" class="inline-input" style="width: 90%;"></td></tr>
+            </table>
+            
+            <h3 class="section-title" style="font-size: 1.1em; border: none; margin-top: 15px;">Other Gear</h3>
+            <textarea style="height: 80px;" placeholder="Traveling gear, property, etc..."></textarea>
         </div>
     </div>
 
-    <h2 class="section-title">Skills Tracker</h2>
-    <div class="grid-2col" style="gap: 15px;">
-        <!-- Generating 12 Empty Skill Rows -->
-        <div style="display: flex; flex-direction: column; gap: 10px;">
-            <script>
-                for(let i=0; i<6; i++) {
-                    document.write(`
-                    <div class="data-row">
-                        <span style="display:flex; gap: 5px;">
-                            <input type="text" class="inline-input" placeholder="Skill Name" style="width: 130px;">
-                            <input type="text" class="inline-input" placeholder="Exp" style="width: 30px; text-align: center;">
-                        </span>
-                        <span class="bubbles">R: <input type="checkbox"><input type="checkbox"><input type="checkbox"> D: <input type="checkbox"><input type="checkbox"><input type="checkbox"> C: <input type="checkbox"><input type="checkbox"><input type="checkbox"></span>
-                    </div>
-                    `);
-                }
-            </script>
-        </div>
-        <div style="display: flex; flex-direction: column; gap: 10px;">
-            <script>
-                for(let i=0; i<6; i++) {
-                    document.write(`
-                    <div class="data-row">
-                        <span style="display:flex; gap: 5px;">
-                            <input type="text" class="inline-input" placeholder="Skill Name" style="width: 130px;">
-                            <input type="text" class="inline-input" placeholder="Exp" style="width: 30px; text-align: center;">
-                        </span>
-                        <span class="bubbles">R: <input type="checkbox"><input type="checkbox"><input type="checkbox"> D: <input type="checkbox"><input type="checkbox"><input type="checkbox"> C: <input type="checkbox"><input type="checkbox"><input type="checkbox"></span>
-                    </div>
-                    `);
-                }
-            </script>
-        </div>
+    <!-- CONTROLS (Hidden on Print) -->
+    <div class="controls">
+        <button onclick="window.print()">🖨️ Print / Save as PDF</button>
+        <button onclick="exportJSON()">💾 Export to File</button>
+        <label class="file-upload-label">
+            📂 Import File
+            <input type="file" id="importFile" accept=".json" onchange="importJSON(event)">
+        </label>
+        <button onclick="clearData()" style="background-color: #555;">🗑️ Wipe Data</button>
     </div>
-
-    <button class="btn-clear" onclick="clearData()">Wipe Character Data</button>
 
 </div>
 
 <script>
+    // System to auto-assign IDs and handle Local Storage
     document.addEventListener("DOMContentLoaded", () => {
         const pagePrefix = window.location.pathname + "_";
         const inputs = document.querySelectorAll("input, textarea");
 
         inputs.forEach((input, index) => {
-            const id = input.id || "bw_input_" + index;
+            const id = input.id || "bw_data_" + index;
             input.id = id;
             const storageKey = pagePrefix + id;
 
@@ -315,34 +449,82 @@
                 }
             }
 
-            input.addEventListener("change", () => {
+            const saveFunc = () => {
                 if (input.type === "checkbox") {
                     localStorage.setItem(storageKey, input.checked);
                 } else {
                     localStorage.setItem(storageKey, input.value);
                 }
-            });
-            input.addEventListener("input", () => {
-                if (input.type !== "checkbox") {
-                    localStorage.setItem(storageKey, input.value);
-                }
-            });
+            };
+            
+            input.addEventListener("change", saveFunc);
+            if(input.type !== "checkbox") input.addEventListener("input", saveFunc);
         });
     });
 
+    // Wipes Local Storage for this page
     function clearData() {
-        if(confirm("Are you sure you want to wipe all unsaved checkbox and text data? This cannot be undone.")) {
+        if(confirm("Are you sure you want to wipe all unsaved data? This cannot be undone.")) {
             const pagePrefix = window.location.pathname + "_";
             const keysToRemove = [];
             for (let i = 0; i < localStorage.length; i++) {
                 const key = localStorage.key(i);
-                if (key.startsWith(pagePrefix)) {
-                    keysToRemove.push(key);
-                }
+                if (key.startsWith(pagePrefix)) keysToRemove.push(key);
             }
             keysToRemove.forEach(key => localStorage.removeItem(key));
             location.reload();
         }
+    }
+
+    // Exports Local Storage to a downloadable JSON file
+    function exportJSON() {
+        const pagePrefix = window.location.pathname + "_";
+        const data = {};
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key.startsWith(pagePrefix)) {
+                // Remove the prefix so the file is clean and can be imported anywhere
+                const cleanKey = key.replace(pagePrefix, "");
+                data[cleanKey] = localStorage.getItem(key);
+            }
+        }
+        
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        
+        let charName = document.getElementById("char_name").value || "character";
+        charName = charName.toLowerCase().replace(/[^a-z0-9]/g, "_");
+        
+        a.href = url;
+        a.download = charName + "_burning_wheel.json";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    // Imports a JSON file and populates Local Storage
+    function importJSON(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const data = JSON.parse(e.target.result);
+                const pagePrefix = window.location.pathname + "_";
+                
+                for (const key in data) {
+                    localStorage.setItem(pagePrefix + key, data[key]);
+                }
+                alert("Character data imported successfully! The page will now reload.");
+                location.reload();
+            } catch (error) {
+                alert("Error importing file. Make sure it is a valid JSON export from this sheet.");
+            }
+        };
+        reader.readAsText(file);
     }
 </script>
 
